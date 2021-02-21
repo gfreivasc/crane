@@ -50,7 +50,6 @@ class NavRootActivity : AppCompatActivity {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        android.R.id.content
         crane = Crane.Builder()
             .create(routeMap, this, android.R.id.content)
             .root(HomeRoute("Our App Title")) // Must have
