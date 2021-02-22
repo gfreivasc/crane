@@ -1,10 +1,15 @@
 package com.gabrielfv.crane.core.affinity
 
-private typealias FragmentTag = String
-private typealias NavOffset = Int
+import android.os.Bundle
+import com.gabrielfv.crane.util.Saveable
 
-internal class AffinityManager {
-    private val affinityOffset = mutableMapOf<FragmentTag, NavOffset>()
+private typealias Tag = String
+private typealias Offset = Int
+
+
+
+internal class AffinityManager : Saveable {
+    private val affinityOffset = mutableMapOf<Tag, Offset>()
 
     fun push(tag: String? = null) {
         offsetAllBy(1)
@@ -28,9 +33,31 @@ internal class AffinityManager {
             ?.toPair() ?: null.also { popRegular() }
     }
 
+    override fun save(outState: Bundle) {
+        outState.putSerializable(AFFINITY_REGISTRY, HashMap(affinityOffset))
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun restore(savedState: Bundle) {
+        val out = try {
+            savedState
+                .getSerializable(AFFINITY_REGISTRY) as? HashMap<Tag, Offset>?
+        } catch (ex: ClassCastException) {
+            null
+        }
+
+        if (out != null) {
+            affinityOffset.putAll(out)
+        }
+    }
+
     private fun offsetAllBy(offset: Int) {
         affinityOffset.forEach { entry ->
             affinityOffset[entry.key] = entry.value + offset
         }
+    }
+
+    companion object {
+        const val AFFINITY_REGISTRY = "com.gabrielfv.crane.AFFINITY_REGISTRY"
     }
 }

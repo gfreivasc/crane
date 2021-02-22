@@ -60,7 +60,7 @@ class NavRootActivity : AppCompatActivity {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        // Allow Crane to save what it need to
+        // Allow Crane to save what it needs to
         crane.saveInstanceState(outState)
     }
 

@@ -1,5 +1,9 @@
 package com.gabrielfv.crane.core.affinity
 
+import android.os.Bundle
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -68,5 +72,48 @@ class AffinityManagerTest {
         assertThat(offsetTop).isEqualTo(3)
         assertThat(affinityBottom).isEqualTo("A")
         assertThat(offsetBottom).isEqualTo(2)
+    }
+
+    @Test
+    fun onSave() {
+        val bundle: Bundle = mockk(relaxed = true)
+        val subject = AffinityManager()
+        subject.push("A")
+        subject.push()
+
+        subject.save(bundle)
+
+        verify {
+            bundle.putSerializable(
+                eq(AffinityManager.AFFINITY_REGISTRY),
+                eq(HashMap(mapOf("A" to 2)))
+            )
+        }
+    }
+
+    @Test
+    fun onRestore() {
+        val bundle: Bundle = mockk {
+            every { getSerializable(eq(AffinityManager.AFFINITY_REGISTRY)) }
+                .returns(HashMap(mapOf("A" to 2)))
+        }
+        val subject = AffinityManager()
+
+        subject.restore(bundle)
+
+        val (tag, offset) = subject.popAffinity()!!
+        assertThat(tag).isEqualTo("A")
+        assertThat(offset).isEqualTo(2)
+    }
+
+    @Test
+    fun onRestore_noData() {
+        val bundle: Bundle = mockk(relaxed = true)
+        val subject = AffinityManager()
+
+        subject.restore(bundle)
+
+        val result = subject.popAffinity()
+        assertThat(result).isNull()
     }
 }

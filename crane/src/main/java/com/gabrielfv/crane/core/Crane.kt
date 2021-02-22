@@ -10,6 +10,7 @@ import com.gabrielfv.crane.FragmentAnimation
 import com.gabrielfv.crane.core.affinity.AffinityManager
 import com.gabrielfv.crane.core.affinity.AffinityRoute
 import com.gabrielfv.crane.core.result.ResultRegistry
+import com.gabrielfv.crane.util.Saveable
 import com.gabrielfv.crane.util.placeKey
 import com.gabrielfv.crane.util.setCustomAnimations
 import com.gabrielfv.crane.util.transaction
@@ -26,6 +27,7 @@ class Crane internal constructor(
 ) {
     private val fragmentManager = rootActivity.supportFragmentManager
     private var stackRecord: Int = fragmentManager.backStackEntryCount
+    private val saveables = setOf(affinityManager, resultRegistry)
 
     internal fun setRoot(route: Route) {
         affinityManager.push(ROOT_AFFINITY_TAG)
@@ -109,11 +111,11 @@ class Crane internal constructor(
     fun <T : Parcelable> fetchResult(cls: KClass<T>): T? = resultRegistry.fetch(cls)
 
     fun saveInstanceState(outState: Bundle) {
-        resultRegistry.save(outState)
+        saveables.forEach { it.save(outState) }
     }
 
     fun restoreSavedState(savedInstanceState: Bundle) {
-        resultRegistry.restore(savedInstanceState)
+        saveables.forEach { it.restore(savedInstanceState) }
     }
 
     companion object {

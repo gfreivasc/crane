@@ -275,6 +275,7 @@ class CraneTest {
 
         verify {
             resultRegistry.save(eq(bundle))
+            affinityManager.save(eq(bundle))
         }
     }
 
@@ -287,6 +288,7 @@ class CraneTest {
 
         verify {
             resultRegistry.restore(eq(bundle))
+            affinityManager.restore(eq(bundle))
         }
     }
 
