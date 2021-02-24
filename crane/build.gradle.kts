@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
+    id("internal.publishing")
 }
 
 android {
@@ -31,4 +32,17 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk:1.10.6")
     testImplementation("org.assertj:assertj-core:3.19.0")
+}
+
+internalPublishing {
+    artifactId = "crane"
+    groupId = findProperty("library.groupId") as String
+    version = findProperty("library.version") as String
+    versionSuffix = System.getenv("VERSION_SUFFIX").orEmpty()
+
+    gitHub {
+        repository = findProperty("library.repository") as String
+        username = System.getenv("GITHUB_PUBLISH_USERNAME").orEmpty()
+        password = System.getenv("GITHUB_PUBLISH_TOKEN").orEmpty()
+    }
 }

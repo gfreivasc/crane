@@ -1,6 +1,7 @@
 plugins {
     id("com.google.devtools.ksp")
     kotlin("jvm")
+    id("internal.publishing")
 }
 
 group = "com.gabrielfv"
@@ -20,6 +21,15 @@ dependencies {
     ksp("dev.zacsweers.autoservice:auto-service-ksp:0.3.2")
 }
 
-sourceSets.main {
-    java.srcDirs("src/main/kotlin")
+internalPublishing {
+    artifactId = "crane-router"
+    groupId = findProperty("library.groupId") as String
+    version = findProperty("library.version") as String
+    versionSuffix = System.getenv("VERSION_SUFFIX").orEmpty()
+
+    gitHub {
+        repository = findProperty("library.repository") as String
+        username = System.getenv("GITHUB_PUBLISH_USERNAME").orEmpty()
+        password = System.getenv("GITHUB_PUBLISH_TOKEN").orEmpty()
+    }
 }
