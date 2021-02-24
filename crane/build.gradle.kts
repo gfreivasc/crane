@@ -26,12 +26,12 @@ android {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("androidx.core:core-ktx:1.3.2")
-    implementation("androidx.appcompat:appcompat:1.2.0")
+    implementation(Deps.Android.appcompat)
+    implementation(Deps.Android.coreKtx)
 
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("io.mockk:mockk:1.10.6")
-    testImplementation("org.assertj:assertj-core:3.19.0")
+    testImplementation(Deps.Testing.jUnit)
+    testImplementation(Deps.Testing.assertJ)
+    testImplementation(Deps.Testing.mockK)
 }
 
 internalPublishing {
