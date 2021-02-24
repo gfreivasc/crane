@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
 }
 ```
 
-Crane does not know from scratch that `HomeRoute` routes to `HomeFragment`. For that, we need a `RouteMap` which is a typealias for simply a regular `Map` that will wire the classes. (*This can be a bit of a hassle as the project scales, for that reason a Router is being created.*)
+Crane does not know from scratch that `HomeRoute` routes to `HomeFragment`. For that, we need a `RouteMap` which is a typealias for simply a regular `Map` that will wire our routes to our fragments.
 
 ```kotlin
 // This would be placed in your bottom module, i.e. ":app" module
@@ -71,13 +71,45 @@ class NavRootActivity : AppCompatActivity {
 }
 ```
 
-You will also need to make the same `Crane` instance available across your app, so that fragments can use that to navigate to other fragments. Ideally this should be handled by your project's dependency inversion solution, but a singleton accessor is planned.
+#### Using a generated route map
+
+Instead of manually creating our route map, we can also rely on `crane-router` to automatically do it for us by using the `@RoutedBy` annotation
+
+```kotlin
+// router currently only works if the fragment is in the bottom module
+@RoutedBy(HomeRoute::class)
+class HomeFragment : Fragment() {
+    // ...
+}
+```
+
+And wiring a `Router` will be generated, which can be referenced when building Crane.
+
+```kotlin
+class NavRootActivity : AppCompatActivity {
+    private lateinit var crane: Crane
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        crane = Crane.Builder()
+            .create(Router.get(), this, android.R.id.content)
+            // ...
+            .build()
+    }
+}
+```
+
+The router works through KSP, which is currently experimental, and can only generate one RouteMap class, making it not very useful outside the bottom class. Making it able to parse and merge multiple modules is currently in the works.
+
+#### Wrapping up
+
+You will also need to make the same `Crane` instance available across your app, so that fragments can use that to navigate to other fragments. Ideally this should be handled by your project's dependency inversion solution, but a singleton accessor is planned. So you'll need:
 
 - A root activity with a `FragmentManager`.
 - A fragment that will represent your navigation home.
 - A `Route` to that fragment.
 - A Route map, that tells `Crane` which fragment a `Route` leads to.
-  - *Soon to come: A router that can create that automatically.*
+  - `crane-router` can automate that process, but currently only for single-module projects.
 - Something to hold the single `Crane` instance and make it available to the rest of the project.
 
 ### Navigation Affinity
