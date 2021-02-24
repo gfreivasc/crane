@@ -5,7 +5,8 @@ buildscript {
     }
     dependencies {
         classpath("com.android.tools.build:gradle:4.1.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30")
+        classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.4.30-dev-experimental-20210205")
+        classpath(kotlin("gradle-plugin", version = "1.4.30"))
     }
 }
 

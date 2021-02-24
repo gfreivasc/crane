@@ -8,15 +8,8 @@ android {
     buildToolsVersion("30.0.3")
 
     defaultConfig {
-        minSdkVersion(16)
+        minSdkVersion(1)
         targetSdkVersion(30)
-
-        testInstrumentationRunner("androidx.test.runner.AndroidJUnitRunner")
-    }
-    buildTypes {
-        named("release") {
-            isMinifyEnabled = false
-        }
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
