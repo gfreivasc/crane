@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("internal.publishing")
+    id("maven-publish")
 }
 
 android {
@@ -34,15 +34,16 @@ dependencies {
     testImplementation(Deps.Testing.mockK)
 }
 
-internalPublishing {
-    artifactId = "crane"
-    groupId = findProperty("library.groupId") as String
-    version = findProperty("library.version") as String
-    versionSuffix = System.getenv("VERSION_SUFFIX").orEmpty()
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components.findByName("release"))
 
-    gitHub {
-        repository = findProperty("library.repository") as String
-        username = System.getenv("GITHUB_PUBLISH_USERNAME").orEmpty()
-        password = System.getenv("GITHUB_PUBLISH_TOKEN").orEmpty()
+                artifactId = "crane"
+                groupId = project.findProperty("library.groupId") as String
+                version = project.findProperty("library.version") as String
+            }
+        }
     }
 }

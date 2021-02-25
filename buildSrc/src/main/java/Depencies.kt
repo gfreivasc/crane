@@ -39,7 +39,7 @@ object Deps {
     object Testing {
         const val jUnit = "junit:junit:${Versions.Testing.jUnit}"
         const val mockK = "io.mockk:mockk:${Versions.Testing.mockK}"
-        const val assertJ = "org.assertj:assertj-core:${Versions.Testing.kotlinCompile}"
+        const val assertJ = "org.assertj:assertj-core:${Versions.Testing.assertJ}"
         object KotlinCompile {
             const val base = "com.github.tschuchortdev:kotlin-compile-testing:${Versions.Testing.kotlinCompile}"
             const val ksp = "com.github.tschuchortdev:kotlin-compile-testing-ksp:${Versions.Testing.kotlinCompile}"

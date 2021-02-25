@@ -4,9 +4,9 @@ buildscript {
         jcenter()
     }
     dependencies {
+        classpath(kotlin("gradle-plugin", version = Versions.Kotlin.lang))
         classpath(Deps.Android.gradle)
         classpath(Deps.KSP.classpath)
-        classpath(kotlin("gradle-plugin", version = Versions.Kotlin.lang))
     }
 }
 

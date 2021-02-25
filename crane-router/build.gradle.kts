@@ -1,11 +1,11 @@
 plugins {
     id("com.google.devtools.ksp")
     kotlin("jvm")
-    id("internal.publishing")
+    id("maven-publish")
 }
 
-group = "com.gabrielfv"
-version = "1.0-SNAPSHOT"
+group = project.findProperty("library.groupId") as String
+version = project.findProperty("library.version") as String
 
 dependencies {
     implementation(kotlin("stdlib"))
@@ -21,15 +21,16 @@ dependencies {
     testImplementation(Deps.Testing.assertJ)
 }
 
-internalPublishing {
-    artifactId = "crane-router"
-    groupId = findProperty("library.groupId") as String
-    version = findProperty("library.version") as String
-    versionSuffix = System.getenv("VERSION_SUFFIX").orEmpty()
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components.findByName("release"))
 
-    gitHub {
-        repository = findProperty("library.repository") as String
-        username = System.getenv("GITHUB_PUBLISH_USERNAME").orEmpty()
-        password = System.getenv("GITHUB_PUBLISH_TOKEN").orEmpty()
+                artifactId = "crane-router"
+                groupId = project.findProperty("library.groupId") as String
+                version = project.findProperty("library.version") as String
+            }
+        }
     }
 }

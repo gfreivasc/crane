@@ -1,6 +1,33 @@
 # Crane
 
+[![](https://jitpack.io/v/com.gabrielfv/crane.svg)](https://jitpack.io/#com.gabrielfv/crane)
+
 A fully programatic, type-safe navigation solution for Android development, focused on multi-modular navigation.
+
+## Installing
+
+Crane artifacts are hosted through JitPack (and there's still no release available currently). You'll need to add jitpack to your build repositories.
+
+```kotlin
+// Your root "build.gradle.kts"
+allprojects {
+	repositories {
+		// ...
+		maven { setUrl("https://jitpack.io") }
+	}
+}
+```
+
+And finally include Crane artifacts to your project (for enabling KSP, [see this guide](https://github.com/google/ksp/blob/master/docs/quickstart.md#use-your-own-processor-in-a-project))
+
+```kotlin
+// Any project module "build.gradle.kts"
+dependencies {
+    implementation("com.gabrielfv.crane:crane:trunk-SNAPSHOT")
+    // If you want to generate routes (currently validated for single-module only)
+    ksp("com.gabrielfv.crane:crane-router:trunk-SNAPSHOT")
+}
+```
 
 ## How it works
 
@@ -165,7 +192,6 @@ val result = crane.fetchResult<ProfileRegistrationResult>()
 ## Roadmap
 
 - Add router project to avoid manual `RouteMap` management.
-- Publish project packages.
 - Refactor result mechanism.
 - Allow nesting.
 
