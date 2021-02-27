@@ -12,6 +12,7 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFile
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
+import kotlin.math.absoluteValue
 
 @AutoService(SymbolProcessor::class)
 class RouteRegistrarProcessor : SymbolProcessor {
@@ -53,7 +54,7 @@ class RouteRegistrarProcessor : SymbolProcessor {
 
   private fun buildFile(routes: MutableMap<String, String>, originatingFiles: List<KSFile>) {
     if (routes.isEmpty()) return
-    val className = "${CLASS_NAME}_${originatingFiles.hashCode()}"
+    val className = "${CLASS_NAME}_${originatingFiles.hashCode().absoluteValue}"
     val file = codeGenerator.createNewFile(
       Dependencies(
         aggregating = false,
@@ -62,7 +63,6 @@ class RouteRegistrarProcessor : SymbolProcessor {
       PACKAGE_NAME,
       className
     )
-    val hash = originatingFiles.hashCode()
     OutputStreamWriter(file, StandardCharsets.UTF_8)
       .use { writer ->
         writer.append("package $PACKAGE_NAME\n\n")

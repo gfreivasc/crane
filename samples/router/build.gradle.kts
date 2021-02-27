@@ -10,7 +10,7 @@ android {
   buildToolsVersion("30.0.3")
 
   defaultConfig {
-    minSdkVersion(19)
+    minSdkVersion(16)
     targetSdkVersion(30)
 
     applicationId("com.gabrielfv.crane.routersample")

@@ -24,6 +24,8 @@ class RouterProcessor : SymbolProcessor {
     private const val CLASS_NAME = "Router"
   }
 
+  var processed = false
+
   override fun init(
     options: Map<String, String>,
     kotlinVersion: KotlinVersion,
@@ -37,7 +39,7 @@ class RouterProcessor : SymbolProcessor {
   override fun finish() {}
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
-    val registrars = resolver.getAllFiles().asSequence()
+    val registrars = resolver.getAllFiles()
       .filter { it.isInRegistrarPackage }
       .flatMap { file ->
         file.declarations.filter { ksDeclaration ->
@@ -47,8 +49,9 @@ class RouterProcessor : SymbolProcessor {
               .contains(RouteRegistrarProcessor.CLASS_NAME)
         }.map { it as KSClassDeclaration }
       }.toList()
-    if (registrars.isNotEmpty()) {
+    if (registrars.isNotEmpty() && !processed) {
       processRegistrars(registrars)
+      processed = true
     }
     return resolver.getAllFiles()
       .filterNot { it.isInRegistrarPackage }
@@ -79,8 +82,8 @@ class RouterProcessor : SymbolProcessor {
     writer.append("$declaration\n")
     writer.append("  )\n\n")
     writer.append("  fun get() = registrars.flatMap { registrar ->\n")
-    writer.append("    registrar.get()\n")
-    writer.append("  }\n")
+    writer.append("    registrar.get().toList()\n")
+    writer.append("  }.toMap()\n")
     writer.append("}\n")
   }
 
