@@ -11,10 +11,10 @@ Crane artifacts are hosted through JitPack (and there's still no release availab
 ```kotlin
 // Your root "build.gradle.kts"
 allprojects {
-	repositories {
-		// ...
-		maven { setUrl("https://jitpack.io") }
-	}
+    repositories {
+        // ...
+        maven { setUrl("https://jitpack.io") }
+    }
 }
 ```
 
