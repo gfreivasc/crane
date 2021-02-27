@@ -7,16 +7,30 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.KSVisitorVoid
 
-internal class RouterVisitor(
+internal class RouteRegistrarVisitor(
   private val outputMap: MutableMap<String, String>,
   private val logger: KSPLogger
 ) : KSVisitorVoid() {
 
   override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
     if (!classDeclaration.isFragmentDeclaration) {
+      val superTypes = classDeclaration.superTypes
+        .joinToString("\n,") { typeRef ->
+          val fqName = typeRef.resolve()
+            .declaration
+            .qualifiedName!!
+            .asString()
+          "  $fqName"
+        }
+      val instanceMsg = if (superTypes.isBlank()) {
+        "not an instance of anything"
+      } else {
+        "an instance of: $superTypes"
+      }
       logger.error(
         "@RoutedBy should only be used against " +
-          "${RouterProcessor.FRAGMENT_FQ_NAME} instances"
+          "${RouteRegistrarProcessor.FRAGMENT_FQ_NAME} instances. " +
+          "${classDeclaration.qualifiedName!!.asString()} is $instanceMsg"
       )
     }
     val fqName = classDeclaration.qualifiedName?.asString() ?: "ERROR"
@@ -64,7 +78,7 @@ internal class RouterVisitor(
           .declaration
           .qualifiedName
           ?.asString() ?: "ERROR"
-        fqName == RouterProcessor.FRAGMENT_FQ_NAME && classKind == ClassKind.CLASS
+        fqName == RouteRegistrarProcessor.FRAGMENT_FQ_NAME && classKind == ClassKind.CLASS
       }
     }
 
@@ -74,7 +88,7 @@ internal class RouterVisitor(
         .resolve()
         .declaration
       return type.qualifiedName
-        ?.asString() ?: "ERROR" == RouterProcessor.ANNOTATION_FQ_NAME
+        ?.asString() ?: "ERROR" == RouteRegistrarProcessor.ANNOTATION_FQ_NAME
     }
 
   private fun <T> Collection<T>.contains(predicate: (T) -> Boolean): Boolean {

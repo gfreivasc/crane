@@ -3,9 +3,11 @@ package com.gabrielfv.crane.routersample
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.gabrielfv.crane.core.Crane
+import com.gabrielfv.crane.router.CraneRoot
 import com.gabrielfv.crane.routersample.databinding.ActivityMainBinding
 import com.gabrielfv.crane.routes.Router
 
+@CraneRoot
 class CraneRootActivity : AppCompatActivity() {
   private lateinit var crane: Crane
 

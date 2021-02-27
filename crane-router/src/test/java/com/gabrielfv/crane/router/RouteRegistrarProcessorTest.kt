@@ -10,7 +10,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
-class RouterProcessorTest {
+class RouteRegistrarProcessorTest {
   @field:Rule
   @JvmField
   val temporaryFolder = TemporaryFolder()
@@ -119,7 +119,7 @@ class RouterProcessorTest {
       .apply {
         workingDir = temporaryFolder.root
         inheritClassPath = true
-        symbolProcessors = listOf(RouterProcessor())
+        symbolProcessors = listOf(RouteRegistrarProcessor())
         sources = sourceFiles.asList()
         verbose = false
       }.compile()

@@ -9,14 +9,20 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.impl.MessageCollectorBasedKSPLogger
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSFile
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
+import kotlin.math.absoluteValue
 
 @AutoService(SymbolProcessor::class)
 class RouterProcessor : SymbolProcessor {
   private lateinit var codeGenerator: CodeGenerator
   private lateinit var logger: KSPLogger
+
+  companion object {
+    private const val ROOT_ANNOTATION_FQ_NAME = "com.gabrielfv.crane.router.CraneRoot"
+    private const val PACKAGE_NAME = "com.gabrielfv.crane.routes"
+    private const val CLASS_NAME = "Router"
+  }
 
   override fun init(
     options: Map<String, String>,
@@ -31,53 +37,54 @@ class RouterProcessor : SymbolProcessor {
   override fun finish() {}
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
-    val symbols = resolver.getSymbolsWithAnnotation(ANNOTATION_FQ_NAME)
-    val input = symbols.filterIsInstance<KSClassDeclaration>()
-    if (input.isNotEmpty()) {
-      val output = mutableMapOf<String, String>()
-      val visitor = RouterVisitor(output, logger)
-      input.forEach { it.accept(visitor, Unit) }
-      val originatingFiles = input.map { it.containingFile!! }
-      buildFile(output, originatingFiles)
+    val symbols = resolver.getSymbolsWithAnnotation(ROOT_ANNOTATION_FQ_NAME)
+    if (symbols.isEmpty()) return emptyList()
+    val registrars = resolver
+      .getSymbolsWithAnnotation(RouteRegistrarProcessor.REG_ANNOTATION_FQ_NAME)
+      .filterIsInstance<KSClassDeclaration>()
+    if (registrars.isNotEmpty()) {
+      processRegistrars(registrars)
+      return emptyList()
     }
-    return symbols.filterNot { it is KSClassDeclaration }
+    return symbols
   }
 
-  private fun buildFile(routes: MutableMap<String, String>, originatingFiles: List<KSFile>) {
-    if (routes.isEmpty()) return
+  private fun processRegistrars(registrars: List<KSClassDeclaration>) {
+    if (registrars.isEmpty()) return
     val file = codeGenerator.createNewFile(
       Dependencies(
         aggregating = false,
-        *originatingFiles.toTypedArray()
+        *registrars.map { it.containingFile!! }.toTypedArray()
       ),
-      FILE_NAME,
+      PACKAGE_NAME,
       CLASS_NAME
     )
     OutputStreamWriter(file, StandardCharsets.UTF_8)
-      .use { writer ->
-        writer.append("package $FILE_NAME\n\n")
-        writer.append("import $ROUTE_MAP_FQ_NAME\n\n")
-        writer.append("object $CLASS_NAME {\n")
-        writer.append("  fun get(): RouteMap = mapOf(\n")
-        val formattedRoutes = routes.map { (routeFqName, targetFqName) ->
-          "    $routeFqName::class to $targetFqName::class"
-        }.joinToString(",\n")
-        writer.append("$formattedRoutes\n")
-        writer.append("  )\n")
-        writer.append("}\n")
-      }
+      .use { writeFile(it, registrars) }
   }
 
-  companion object {
-    const val ANNOTATION_FQ_NAME = "com.gabrielfv.crane.router.RoutedBy"
-    const val FRAGMENT_FQ_NAME = "androidx.fragment.app.Fragment"
-    private const val ROUTE_MAP_FQ_NAME = "com.gabrielfv.crane.core.RouteMap"
-    private const val FILE_NAME = "com.gabrielfv.crane.routes"
-    private const val CLASS_NAME = "Router"
+  private fun writeFile(writer: OutputStreamWriter, registrars: List<KSClassDeclaration>) {
+    writer.append("package $PACKAGE_NAME\n\n")
+    writer.append("import ${RouteRegistrarProcessor.PACKAGE_NAME}.*\n\n")
+    writer.append("internal object $CLASS_NAME {\n")
+    writer.append("  private val registrars get() = setOf(\n")
+    val declaration = registrars.joinToString(",\n") {
+      "    ${it.simpleName.asString()}"
+    }
+    writer.append("$declaration\n")
+    writer.append("  )\n\n")
+    writer.append("  fun get() = registrars.flatMap { registrar ->\n")
+    writer.append("    registrar.get().toList()\n")
+    writer.append("  }.toMap()\n")
+    writer.append("}\n")
   }
 
   override fun onError() {
     (logger as? MessageCollectorBasedKSPLogger)?.reportAll()
     throw RuntimeException("Check KSP messages for errors")
   }
+
+  private val KSClassDeclaration.isInRegistrarPackage: Boolean
+    get() = packageName.asString() == RouteRegistrarProcessor.PACKAGE_NAME
+
 }
