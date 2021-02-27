@@ -5,5 +5,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CollapsibleResult(
-    val confirmedAge: Int
+  val confirmedAge: Int
 ) : Parcelable

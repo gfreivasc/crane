@@ -15,7 +15,7 @@
         android:layout_marginLeft="16dp"
         android:text="@string/hello_blank_fragment"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/goToRegular"

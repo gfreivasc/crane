@@ -14,11 +14,11 @@ class ARoute : Route
 @RoutedBy(ARoute::class)
 class AFragment : Fragment(R.layout.a_fragment) {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val binding = AFragmentBinding.bind(view)
-        binding.textView.setOnClickListener {
-            NavReg.crane.push(BRoute())
-        }
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    val binding = AFragmentBinding.bind(view)
+    binding.textView.setOnClickListener {
+      NavReg.crane.push(BRoute())
     }
+  }
 }

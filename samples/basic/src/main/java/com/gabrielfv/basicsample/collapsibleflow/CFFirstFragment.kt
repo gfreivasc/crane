@@ -17,24 +17,24 @@ import kotlinx.parcelize.Parcelize
 data class CFFirstRoute(val age: Int) : AffinityRoute
 
 class CFFirstFragment : Fragment() {
-    private val crane by lazy { NavRegistry.crane }
-    private val params: CFFirstRoute by params()
+  private val crane by lazy { NavRegistry.crane }
+  private val params: CFFirstRoute by params()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.cffirst_fragment, container, false)
-    }
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    return inflater.inflate(R.layout.cffirst_fragment, container, false)
+  }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val confirmText = view.findViewById<TextView>(R.id.confirmText)
-        val button = view.findViewById<Button>(R.id.button)
-        confirmText.text = "Are you really ${params.age}?"
-        button.setOnClickListener {
-            crane.push(CFSecondRoute(params.age))
-        }
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    val confirmText = view.findViewById<TextView>(R.id.confirmText)
+    val button = view.findViewById<Button>(R.id.button)
+    confirmText.text = "Are you really ${params.age}?"
+    button.setOnClickListener {
+      crane.push(CFSecondRoute(params.age))
     }
+  }
 }

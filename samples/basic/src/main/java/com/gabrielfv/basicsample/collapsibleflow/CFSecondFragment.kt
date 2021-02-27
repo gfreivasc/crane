@@ -17,26 +17,26 @@ import kotlinx.parcelize.Parcelize
 data class CFSecondRoute(val age: Int) : Route
 
 class CFSecondFragment : Fragment() {
-    private val crane by lazy { NavRegistry.crane }
-    private val params: CFSecondRoute by params()
+  private val crane by lazy { NavRegistry.crane }
+  private val params: CFSecondRoute by params()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.cfsecond_fragment, container, false)
-    }
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    return inflater.inflate(R.layout.cfsecond_fragment, container, false)
+  }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val finishText = view.findViewById<TextView>(R.id.finishText)
-        val finishButton = view.findViewById<Button>(R.id.finishButton)
-        finishText.text = "Ok, this is meant for ${params.age} year olds."
-        finishButton.setOnClickListener {
-            crane.pushResult(CollapsibleResult(params.age))
-            crane.popAffinity()
-            crane.push(CFSuccessRoute())
-        }
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    val finishText = view.findViewById<TextView>(R.id.finishText)
+    val finishButton = view.findViewById<Button>(R.id.finishButton)
+    finishText.text = "Ok, this is meant for ${params.age} year olds."
+    finishButton.setOnClickListener {
+      crane.pushResult(CollapsibleResult(params.age))
+      crane.popAffinity()
+      crane.push(CFSuccessRoute())
     }
+  }
 }

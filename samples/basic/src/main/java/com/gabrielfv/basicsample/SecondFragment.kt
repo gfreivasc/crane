@@ -15,24 +15,24 @@ import kotlinx.parcelize.Parcelize
 data class SecondRoute(val number: Int) : Route
 
 class SecondFragment : Fragment() {
-    private val crane by lazy { NavRegistry.crane }
-    private val params: SecondRoute by params()
+  private val crane by lazy { NavRegistry.crane }
+  private val params: SecondRoute by params()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.second_fragment, container, false)
-    }
+  override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    // Inflate the layout for this fragment
+    return inflater.inflate(R.layout.second_fragment, container, false)
+  }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        view.findViewById<TextView>(R.id.number).apply {
-            text = "Has ${params.number} years old"
-            setOnClickListener {
-                crane.push(CFFirstRoute(params.number))
-            }
-        }
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    view.findViewById<TextView>(R.id.number).apply {
+      text = "Has ${params.number} years old"
+      setOnClickListener {
+        crane.push(CFFirstRoute(params.number))
+      }
     }
+  }
 }

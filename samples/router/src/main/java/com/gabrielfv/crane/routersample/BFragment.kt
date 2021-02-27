@@ -14,12 +14,12 @@ class BRoute : Route
 @RoutedBy(BRoute::class)
 class BFragment : Fragment(R.layout.b_fragment) {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        BFragmentBinding.bind(view).run {
-            textView.setOnClickListener {
-                NavReg.crane.pop()
-            }
-        }
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    BFragmentBinding.bind(view).run {
+      textView.setOnClickListener {
+        NavReg.crane.pop()
+      }
     }
+  }
 }
