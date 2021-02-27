@@ -25,7 +25,7 @@ afterEvaluate {
   publishing {
     publications {
       create<MavenPublication>("maven") {
-        from(components.findByName("release"))
+        from(components.findByName("java"))
 
         artifactId = "crane-router"
         groupId = project.findProperty("library.groupId") as String
