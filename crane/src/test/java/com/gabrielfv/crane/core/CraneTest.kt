@@ -4,9 +4,14 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.gabrielfv.crane.*
+import com.gabrielfv.crane.A
+import com.gabrielfv.crane.AFragment
+import com.gabrielfv.crane.Affinity
+import com.gabrielfv.crane.FragmentAnimation
+import com.gabrielfv.crane.Result
 import com.gabrielfv.crane.core.affinity.AffinityManager
 import com.gabrielfv.crane.core.result.ResultRegistry
+import com.gabrielfv.crane.testFragmentFactory
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

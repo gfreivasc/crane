@@ -1,7 +1,11 @@
 package com.gabrielfv.crane.router
 
 import com.google.devtools.ksp.processing.KSPLogger
-import com.google.devtools.ksp.symbol.*
+import com.google.devtools.ksp.symbol.ClassKind
+import com.google.devtools.ksp.symbol.KSAnnotation
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSType
+import com.google.devtools.ksp.symbol.KSVisitorVoid
 
 internal class RouterVisitor(
   private val outputMap: MutableMap<String, String>,
