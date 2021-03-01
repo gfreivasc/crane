@@ -24,7 +24,10 @@ And finally include Crane artifacts to your project (for enabling KSP, [see this
 // Any project module "build.gradle.kts"
 dependencies {
     implementation("com.gabrielfv.crane:crane:trunk-SNAPSHOT")
-    // If you want to generate routes (currently validated for single-module only)
+    // For automatic routing
+    implementation("com.gabrielfv.crane:crane-annotations:trunk-SNAPSHOT")
+    kapt("com.gabrielfv.crane:crane-router:trunk-SNAPSHOT")
+    // With ksp (currently only supporting single module) use this instead of kapt
     ksp("com.gabrielfv.crane:crane-router:trunk-SNAPSHOT")
 }
 ```
@@ -110,9 +113,10 @@ class HomeFragment : Fragment() {
 }
 ```
 
-And wiring a `Router` will be generated, which can be referenced when building Crane.
+We should also annotate where we intend to build our navigation with `@CraneRoot`, this will inform our code generator in which module and package it should generate our `Router`. Once it's generated, we can reference it when building Crane.
 
 ```kotlin
+@CraneRoot
 class NavRootActivity : AppCompatActivity {
     private lateinit var crane: Crane
 
@@ -126,7 +130,7 @@ class NavRootActivity : AppCompatActivity {
 }
 ```
 
-The router works through KSP, which is currently experimental, and can only generate one RouteMap class, making it not very useful outside the bottom class. Making it able to parse and merge multiple modules is currently in the works.
+The router works through annotation processing, and supports both [KAPT](https://kotlinlang.org/docs/kapt.html) *and* [KSP](https://github.com/google/ksp). Pick which you prefer to use with Crane, but beware KSP is currently experimental, and can only properly generate a `Router` in a single module project. KSP currently has no support for reaching classes from dependency modules, which makes it unable to generate a multi-module router.
 
 #### Wrapping up
 
