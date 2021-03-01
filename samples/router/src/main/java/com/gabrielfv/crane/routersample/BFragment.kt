@@ -3,8 +3,8 @@ package com.gabrielfv.crane.routersample
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.gabrielfv.crane.annotations.RoutedBy
 import com.gabrielfv.crane.core.Route
-import com.gabrielfv.crane.router.RoutedBy
 import com.gabrielfv.crane.routersample.databinding.BFragmentBinding
 import kotlinx.parcelize.Parcelize
 

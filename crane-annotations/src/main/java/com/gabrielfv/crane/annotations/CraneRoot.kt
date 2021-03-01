@@ -1,4 +1,4 @@
-package com.gabrielfv.crane.router
+package com.gabrielfv.crane.annotations
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)

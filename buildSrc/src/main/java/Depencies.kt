@@ -17,9 +17,14 @@ object Versions {
     const val kotlinCompile = "1.3.5"
   }
 
-  object AutoService {
-    const val annotations = "1.0-rc7"
-    const val ksp = "0.3.2"
+  object GoogleAuto {
+    const val service = "1.0-rc7"
+    const val serviceKsp = "0.3.2"
+    const val common = "0.11"
+  }
+
+  object Gradle {
+    const val inCap = "0.2"
   }
 }
 
@@ -47,8 +52,14 @@ object Deps {
     }
   }
 
-  object AutoService {
-    const val annotations = "com.google.auto.service:auto-service-annotations:${Versions.AutoService.annotations}"
-    const val ksp = "dev.zacsweers.autoservice:auto-service-ksp:${Versions.AutoService.ksp}"
+  object GoogleAuto {
+    const val serviceAnnotations = "com.google.auto.service:auto-service-annotations:${Versions.GoogleAuto.service}"
+    const val service = "com.google.auto.service:auto-service:${Versions.GoogleAuto.service}"
+    const val serviceKsp = "dev.zacsweers.autoservice:auto-service-ksp:${Versions.GoogleAuto.serviceKsp}"
+    const val common = "com.google.auto:auto-common:${Versions.GoogleAuto.common}"
+  }
+
+  object Gradle {
+    const val inCap = "net.ltgt.gradle.incap:incap:${Versions.Gradle.inCap}"
   }
 }

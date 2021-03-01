@@ -1,6 +1,7 @@
 plugins {
-  id("com.google.devtools.ksp")
   kotlin("jvm")
+  kotlin("kapt")
+  id("com.google.devtools.ksp")
   id("maven-publish")
 }
 
@@ -8,11 +9,15 @@ group = project.findProperty("library.groupId") as String
 version = project.findProperty("library.version") as String
 
 dependencies {
+  implementation(project(":crane-annotations"))
   implementation(kotlin("stdlib"))
   implementation(Deps.KSP.api)
-  implementation(Deps.AutoService.annotations)
+  implementation(Deps.GoogleAuto.serviceAnnotations)
+  implementation(Deps.GoogleAuto.common)
+  implementation(Deps.Gradle.inCap)
   compileOnly(Deps.KSP.impl)
-  ksp(Deps.AutoService.ksp)
+  kapt(Deps.Gradle.inCap)
+  ksp(Deps.GoogleAuto.serviceKsp)
 
   testImplementation(Deps.Testing.KotlinCompile.base)
   testImplementation(Deps.Testing.KotlinCompile.ksp)

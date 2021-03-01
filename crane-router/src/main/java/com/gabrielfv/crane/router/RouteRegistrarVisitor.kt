@@ -1,5 +1,6 @@
 package com.gabrielfv.crane.router
 
+import com.gabrielfv.crane.annotations.RoutedBy
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSAnnotation
@@ -14,24 +15,7 @@ internal class RouteRegistrarVisitor(
 
   override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
     if (!classDeclaration.isFragmentDeclaration) {
-      val superTypes = classDeclaration.superTypes
-        .joinToString("\n,") { typeRef ->
-          val fqName = typeRef.resolve()
-            .declaration
-            .qualifiedName!!
-            .asString()
-          "  $fqName"
-        }
-      val instanceMsg = if (superTypes.isBlank()) {
-        "not an instance of anything"
-      } else {
-        "an instance of: $superTypes"
-      }
-      logger.error(
-        "@RoutedBy should only be used against " +
-          "${RouteRegistrarProcessor.FRAGMENT_FQ_NAME} instances. " +
-          "${classDeclaration.qualifiedName!!.asString()} is $instanceMsg"
-      )
+      logNotAFragmentError(classDeclaration)
     }
     val fqName = classDeclaration.qualifiedName?.asString() ?: "ERROR"
     val annotations = classDeclaration.annotations.filter { ksAnnotation ->
@@ -70,6 +54,27 @@ internal class RouteRegistrarVisitor(
     return fqName
   }
 
+  private fun logNotAFragmentError(classDeclaration: KSClassDeclaration) {
+    val superTypes = classDeclaration.superTypes
+      .joinToString("\n,") { typeRef ->
+        val fqName = typeRef.resolve()
+          .declaration
+          .qualifiedName!!
+          .asString()
+        "  $fqName"
+      }
+    val instanceMsg = if (superTypes.isBlank()) {
+      "not an instance of anything"
+    } else {
+      "an instance of: $superTypes"
+    }
+    logger.error(
+      "@RoutedBy should only be used against " +
+        "${Types.FRAGMENT} instances. " +
+        "${classDeclaration.qualifiedName!!.asString()} is $instanceMsg"
+    )
+  }
+
   private val KSClassDeclaration.isFragmentDeclaration: Boolean
     get() {
       return superTypes.contains { typeRef ->
@@ -78,7 +83,7 @@ internal class RouteRegistrarVisitor(
           .declaration
           .qualifiedName
           ?.asString() ?: "ERROR"
-        fqName == RouteRegistrarProcessor.FRAGMENT_FQ_NAME && classKind == ClassKind.CLASS
+        fqName == Types.FRAGMENT && classKind == ClassKind.CLASS
       }
     }
 
@@ -88,10 +93,6 @@ internal class RouteRegistrarVisitor(
         .resolve()
         .declaration
       return type.qualifiedName
-        ?.asString() ?: "ERROR" == RouteRegistrarProcessor.ANNOTATION_FQ_NAME
+        ?.asString() ?: "ERROR" == RoutedBy::class.java.name
     }
-
-  private fun <T> Collection<T>.contains(predicate: (T) -> Boolean): Boolean {
-    return find(predicate) != null
-  }
 }

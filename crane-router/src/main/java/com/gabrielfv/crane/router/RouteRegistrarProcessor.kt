@@ -1,5 +1,6 @@
 package com.gabrielfv.crane.router
 
+import com.gabrielfv.crane.annotations.RoutedBy
 import com.google.auto.service.AutoService
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
@@ -10,23 +11,13 @@ import com.google.devtools.ksp.processing.impl.MessageCollectorBasedKSPLogger
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFile
-import java.io.OutputStreamWriter
-import java.nio.charset.StandardCharsets
 import kotlin.math.absoluteValue
 
 @AutoService(SymbolProcessor::class)
 class RouteRegistrarProcessor : SymbolProcessor {
   private lateinit var codeGenerator: CodeGenerator
   private lateinit var logger: KSPLogger
-
-  companion object {
-    const val ANNOTATION_FQ_NAME = "com.gabrielfv.crane.router.RoutedBy"
-    const val REG_ANNOTATION_FQ_NAME = "com.gabrielfv.crane.internal.RouteRegistrar"
-    const val FRAGMENT_FQ_NAME = "androidx.fragment.app.Fragment"
-    const val PACKAGE_NAME = "com.gabrielfv.crane.routes.registrar"
-    const val CLASS_NAME = "RouteRegistrar"
-    const val ROUTE_MAP_FQ_NAME = "com.gabrielfv.crane.core.RouteMap"
-  }
+  private val generator = RouteRegistrarGenerator()
 
   override fun init(
     options: Map<String, String>,
@@ -41,7 +32,7 @@ class RouteRegistrarProcessor : SymbolProcessor {
   override fun finish() {}
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
-    val symbols = resolver.getSymbolsWithAnnotation(ANNOTATION_FQ_NAME)
+    val symbols = resolver.getSymbolsWithAnnotation(RoutedBy::class.java.name)
     val input = symbols.filterIsInstance<KSClassDeclaration>()
     if (input.isNotEmpty()) {
       val output = mutableMapOf<String, String>()
@@ -55,29 +46,17 @@ class RouteRegistrarProcessor : SymbolProcessor {
 
   private fun buildFile(routes: MutableMap<String, String>, originatingFiles: List<KSFile>) {
     if (routes.isEmpty()) return
-    val className = "${CLASS_NAME}_${originatingFiles.hashCode().absoluteValue}"
+    val className =
+      "${RouteRegistrarGenerator.CLASS_NAME}_${originatingFiles.hashCode().absoluteValue}"
     val file = codeGenerator.createNewFile(
       Dependencies(
         aggregating = false,
         *originatingFiles.toTypedArray()
       ),
-      PACKAGE_NAME,
+      RouteRegistrarGenerator.PACKAGE_NAME,
       className
     )
-    OutputStreamWriter(file, StandardCharsets.UTF_8)
-      .use { writer ->
-        writer.append("package $PACKAGE_NAME\n\n")
-        writer.append("import $ROUTE_MAP_FQ_NAME\n\n")
-        writer.append("@$REG_ANNOTATION_FQ_NAME\n")
-        writer.append("object $className {\n")
-        writer.append("  fun get(): RouteMap = mapOf(\n")
-        val formattedRoutes = routes.map { (routeFqName, targetFqName) ->
-          "    $routeFqName::class to $targetFqName::class"
-        }.joinToString(",\n")
-        writer.append("$formattedRoutes\n")
-        writer.append("  )\n")
-        writer.append("}\n")
-      }
+    generator.generate(file, className, routes)
   }
 
   override fun onError() {

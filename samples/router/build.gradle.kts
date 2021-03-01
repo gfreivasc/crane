@@ -1,6 +1,7 @@
 plugins {
   id("com.android.application")
   kotlin("android")
+  kotlin("kapt")
   id("kotlin-parcelize")
   id("com.google.devtools.ksp")
 }
@@ -10,7 +11,7 @@ android {
   buildToolsVersion("30.0.3")
 
   defaultConfig {
-    minSdkVersion(16)
+    minSdkVersion(19)
     targetSdkVersion(30)
 
     applicationId("com.gabrielfv.crane.routersample")
@@ -48,7 +49,7 @@ android {
 dependencies {
   implementation(project(":crane"))
   implementation(project(":crane-router"))
-  ksp(project(":crane-router"))
+  kapt(project(":crane-router"))
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.30")
   implementation("androidx.core:core-ktx:1.3.2")
