@@ -15,7 +15,8 @@ class CraneRootActivity : AppCompatActivity() {
     val binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
     crane = Crane.Builder()
-      .create(Router.get(), this, android.R.id.content)
+      .create(this, android.R.id.content)
+      .map(Router.get())
       .root(ARoute())
       .build()
     NavReg.crane = crane

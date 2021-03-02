@@ -1,10 +1,14 @@
 package com.gabrielfv.crane.core
 
+import android.os.Bundle
+import android.os.Parcelable
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.gabrielfv.crane.A
 import com.gabrielfv.crane.AFragment
+import com.gabrielfv.crane.core.affinity.AffinityManager
+import com.gabrielfv.crane.core.result.ResultRegistry
 import com.gabrielfv.crane.testFragmentFactory
 import io.mockk.every
 import io.mockk.mockk
@@ -27,99 +31,82 @@ class CraneBuilderTest {
   private val containerViewId = 0
 
   @Test
-  fun onSetRoot_withoutCreate() {
-    val subject = Crane.Builder()
-
-    val result = try {
-      subject.root(A(1))
-    } catch (ex: Throwable) {
-      ex
-    }
-
-    assertThat(result).isInstanceOf(IllegalStateException::class.java)
-    val message = result.let { it as IllegalStateException }.message
-    assertThat(message).isEqualTo(
-      "Crane root has not been set. " +
-        "Make sure to call <create()> before <root()>"
-    )
-  }
-
-  @Test
-  fun onRestoreSavedState_withStateWithoutCreate() {
-    val subject = Crane.Builder()
-
-    val result = try {
-      subject.restoreSavedState(mockk(relaxed = true))
-    } catch (ex: Throwable) {
-      ex
-    }
-
-    assertThat(result).isInstanceOf(IllegalStateException::class.java)
-    val message = result.let { it as IllegalStateException }.message
-    assertThat(message).isEqualTo(
-      "Crane could not restore saved state. " +
-        "Make sure to call <create()> before <restoreSavedState()>"
-    )
-  }
-
-  @Test
-  fun onRestoreSavedState_withoutState() {
-    val subject = Crane.Builder()
-
-    val result = try {
-      subject.restoreSavedState(null)
-    } catch (ex: Throwable) {
-      ex
-    }
-
-    assertThat(result).isInstanceOf(Crane.Builder::class.java)
-  }
-
-  @Test
   fun onBuild_withoutCreate() {
     val subject = Crane.Builder()
 
     val result = try {
-      subject.build()
+      subject.map(routeMap)
+        .root(A(1))
+        .build()
     } catch (ex: Throwable) {
       ex
     }
 
-    assertThat(result).isInstanceOf(IllegalStateException::class.java)
-    val message = result.let { it as IllegalStateException }.message
+    assertThat(result).isInstanceOf(IllegalArgumentException::class.java)
+    val message = result.let { it as IllegalArgumentException }.message
     assertThat(message).isEqualTo(
-      "Crane instance has not been created. " +
-        "Make sure to call <create()> before <build()>"
+      "Cannot build crane. Make sure to call <create()> method on builder."
     )
   }
 
   @Test
-  fun onSetRoot_emptyBackStack() {
-    val fragment = AFragment()
-    every { fragManager.backStackEntryCount } returns 0
-    every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
+  fun onBuild_withoutRouteMap() {
     val subject = Crane.Builder()
-      .create(routeMap, activity, containerViewId)
 
-    subject.root(A(2))
-
-    verify {
-      fragmentTransaction.addToBackStack(eq(Crane.ROOT_AFFINITY_TAG))
-      fragmentTransaction.replace(eq(0), eq(fragment))
+    val result = try {
+      subject.create(activity, containerViewId)
+        .root(A(1))
+        .build()
+    } catch (ex: Throwable) {
+      ex
     }
+
+    assertThat(result).isInstanceOf(IllegalArgumentException::class.java)
+    val message = result.let { it as IllegalArgumentException }.message
+    assertThat(message).isEqualTo(
+      "Cannot initialize crane without a route map. " +
+        "Define one with the <route()> builder method."
+    )
   }
 
   @Test
-  fun onSetRoot_withoutBackStack() {
-    every { fragManager.backStackEntryCount } returns 1
+  fun onBuild_withoutRoot() {
     val subject = Crane.Builder()
-      .create(routeMap, activity, containerViewId)
 
-    subject.root(A(2))
+    val result = try {
+      subject.create(activity, containerViewId)
+        .map(routeMap)
+        .build()
+    } catch (ex: Throwable) {
+      ex
+    }
 
-    verify(exactly = 0) {
-      fragmentTransaction.addToBackStack(eq(Crane.ROOT_AFFINITY_TAG))
-      fragmentTransaction.replace(eq(0), any())
+    assertThat(result).isInstanceOf(IllegalArgumentException::class.java)
+    val message = result.let { it as IllegalArgumentException }.message
+    assertThat(message).isEqualTo(
+      "Cannot start Crane without a root. " +
+        "Define one through the <root()> builder method."
+    )
+  }
+
+  @Test
+  fun onBuild_withSavedState() {
+    val savedState: Bundle = mockk(relaxed = true)
+    val affinityManager: AffinityManager = mockk(relaxed = true)
+    val resultRegistry: ResultRegistry = mockk(relaxed = true)
+    val subject = Crane.Builder(affinityManager, resultRegistry)
+    every { fragManager.backStackEntryCount } returns 0
+    every { fragManager.fragmentFactory } returns mockk(relaxed = true)
+
+    subject.create(activity, containerViewId)
+      .map(routeMap)
+      .root(A(1))
+      .savedState(savedState)
+      .build()
+
+    verify {
+      affinityManager.restore(eq(savedState))
+      resultRegistry.restore(eq(savedState))
     }
   }
 }

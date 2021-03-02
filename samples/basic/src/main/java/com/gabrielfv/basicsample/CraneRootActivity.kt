@@ -13,9 +13,10 @@ class CraneRootActivity : AppCompatActivity() {
     val binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
     crane = Crane.Builder()
-      .create(routeMap, this, binding.root.id)
+      .create(this, binding.root.id)
+      .map(routeMap)
       .root(FirstRoute("Gabriel"))
-      .restoreSavedState(savedInstanceState)
+      .savedState(savedInstanceState)
       .build()
     NavRegistry.crane = crane
   }

@@ -81,10 +81,11 @@ class NavRootActivity : AppCompatActivity {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crane = Crane.Builder()
-            .create(routeMap, this, android.R.id.content)
+            .create(this, android.R.id.content)
+            .map(routeMap)
             .root(HomeRoute("Our App Title")) // Must have
             // Tell Crane to check for state to restore
-            .restoreSavedState(savedInstanceState)
+            .savedState(savedInstanceState)
             .build()
     }
 
@@ -123,7 +124,8 @@ class NavRootActivity : AppCompatActivity {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crane = Crane.Builder()
-            .create(Router.get(), this, android.R.id.content)
+            .create(this, android.R.id.content)
+            .map(Router.get())
             // ...
             .build()
     }
@@ -140,7 +142,7 @@ You will also need to make the same `Crane` instance available across your app, 
 - A fragment that will represent your navigation home.
 - A `Route` to that fragment.
 - A Route map, that tells `Crane` which fragment a `Route` leads to.
-  - `crane-router` can automate that process, but currently only for single-module projects.
+  - `crane-router` can automate that process.
 - Something to hold the single `Crane` instance and make it available to the rest of the project.
 
 ### Navigation Affinity
@@ -195,9 +197,8 @@ val result = crane.fetchResult<ProfileRegistrationResult>()
 
 ## Roadmap
 
-- Add router project to avoid manual `RouteMap` management.
-- Refactor result mechanism.
 - Allow nesting.
+- Refactor result mechanism.
 
 ## License
 

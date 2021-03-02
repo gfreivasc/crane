@@ -122,38 +122,75 @@ class Crane internal constructor(
     internal const val KEY_CRANE_PARAMS = "com.gabrielfv.crane.KEY_CRANE_PARAMS"
   }
 
-  class Builder {
-    private var partial: Crane? = null
+  class Builder internal constructor(
+    private val affinityManager: AffinityManager,
+    private val resultRegistry: ResultRegistry
+  ) {
+    private lateinit var routeMap: RouteMap
+    private lateinit var holder: CraneHolder
+    private lateinit var navRoot: Route
+    private var savedInstanceState: Bundle? = null
+
+    constructor() : this(AffinityManager(), ResultRegistry())
 
     fun create(
-      routeMap: RouteMap,
       activity: FragmentActivity,
       @IdRes containerViewId: Int
     ) = this.apply {
-      val affinityManager = AffinityManager()
-      val resultRegistry = ResultRegistry()
-      partial = Crane(routeMap, activity, containerViewId, affinityManager, resultRegistry)
+      holder = CraneHolder(activity, containerViewId)
+    }
+
+    fun map(routeMap: RouteMap) = this.apply {
+      this.routeMap = routeMap
     }
 
     fun root(route: Route) = this.apply {
-      partial?.setRoot(route) ?: throw IllegalStateException(
-        "Crane root has not been set. " +
-          "Make sure to call <create()> before <root()>"
-      )
+      navRoot = route
     }
 
-    fun restoreSavedState(savedInstanceState: Bundle?) = this.apply {
-      if (savedInstanceState != null) {
-        partial?.restoreSavedState(savedInstanceState) ?: throw IllegalStateException(
-          "Crane could not restore saved state. " +
-            "Make sure to call <create()> before <restoreSavedState()>"
+    fun savedState(savedInstanceState: Bundle?) = this.apply {
+      this.savedInstanceState = savedInstanceState
+    }
+
+    fun build(): Crane {
+      if (!::holder.isInitialized) {
+        throw IllegalArgumentException(
+          "Cannot build crane. Make sure to call <create()> method on builder."
         )
+      }
+      if (!::routeMap.isInitialized) {
+        throw IllegalArgumentException(
+          "Cannot initialize crane without a route map. " +
+            "Define one with the <route()> builder method."
+        )
+      }
+      if (!::navRoot.isInitialized) {
+        throw IllegalArgumentException(
+          "Cannot start Crane without a root. " +
+            "Define one through the <root()> builder method."
+        )
+      }
+      return Crane(
+        routeMap,
+        holder.activity,
+        holder.containerViewId,
+        affinityManager,
+        resultRegistry
+      ).apply(::initialize)
+    }
+
+    private fun initialize(crane: Crane) {
+      with (crane) {
+        setRoot(navRoot)
+        savedInstanceState?.let { savedState ->
+          restoreSavedState(savedState)
+        }
       }
     }
 
-    fun build() = partial ?: throw IllegalStateException(
-      "Crane instance has not been created. " +
-        "Make sure to call <create()> before <build()>"
+    private data class CraneHolder(
+      val activity: FragmentActivity,
+      @IdRes val containerViewId: Int
     )
   }
 }
