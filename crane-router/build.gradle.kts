@@ -13,7 +13,6 @@ dependencies {
   implementation(kotlin("stdlib"))
   implementation(Deps.KSP.api)
   implementation(Deps.GoogleAuto.serviceAnnotations)
-  implementation(Deps.GoogleAuto.common)
   implementation(Deps.Gradle.inCap)
   compileOnly(Deps.KSP.impl)
   kapt(Deps.Gradle.inCap)
