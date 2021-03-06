@@ -11,7 +11,7 @@ android {
   buildToolsVersion("30.0.3")
 
   defaultConfig {
-    minSdkVersion(19)
+    minSdkVersion(16)
     targetSdkVersion(30)
 
     applicationId("com.gabrielfv.crane.routersample")
@@ -55,6 +55,7 @@ dependencies {
   implementation("androidx.core:core-ktx:1.3.2")
   implementation("androidx.appcompat:appcompat:1.2.0")
   implementation("com.google.android.material:material:1.3.0")
+  implementation("androidx.fragment:fragment-ktx:1.3.0")
   implementation("androidx.constraintlayout:constraintlayout:2.0.4")
   implementation("androidx.legacy:legacy-support-v4:1.0.0")
   testImplementation("junit:junit:4.13.2")
