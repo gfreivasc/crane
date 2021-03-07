@@ -14,13 +14,15 @@ dependencies {
   implementation(Deps.KSP.api)
   implementation(Deps.GoogleAuto.serviceAnnotations)
   implementation(Deps.Gradle.inCap)
+  implementation(Deps.Square.kotlinPoet)
   compileOnly(Deps.KSP.impl)
   kapt(Deps.Gradle.inCap)
   ksp(Deps.GoogleAuto.serviceKsp)
 
+  testImplementation(Deps.KSP.impl)
   testImplementation(Deps.Testing.KotlinCompile.base)
   testImplementation(Deps.Testing.KotlinCompile.ksp)
-  testImplementation(Deps.KSP.impl)
+  testImplementation(Deps.Testing.mockK)
   testImplementation(Deps.Testing.jUnit)
   testImplementation(Deps.Testing.assertJ)
 }

@@ -5,9 +5,11 @@ import com.gabrielfv.crane.annotations.RoutedBy
 import com.gabrielfv.crane.annotations.internal.RouteRegistrar
 import com.gabrielfv.crane.router.KAPT_KOTLIN_GENERATED
 import com.gabrielfv.crane.router.RouteRegistrarGenerator
-import com.gabrielfv.crane.router.RouterGenerator
 import com.gabrielfv.crane.router.contains
 import com.gabrielfv.crane.router.e
+import com.gabrielfv.crane.router.generating.FileBuilder
+import com.gabrielfv.crane.router.generating.RouteRegistrarBuilder
+import com.gabrielfv.crane.router.generating.RouterBuilder
 import com.gabrielfv.crane.router.kaptGeneratedSourcesDir
 import com.google.auto.service.AutoService
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
@@ -28,8 +30,8 @@ import kotlin.math.absoluteValue
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor::class)
 class JARouterProcessor : AbstractProcessor() {
-  private val routerGenerator: RouterGenerator = RouterGenerator()
-  private val routeRegistrarGenerator: RouteRegistrarGenerator = RouteRegistrarGenerator()
+  private val routerBuilder: RouterBuilder = RouterBuilder()
+  private val routeRegistrarBuilder: RouteRegistrarBuilder = RouteRegistrarBuilder()
   private val elementUtils get() = processingEnv.elementUtils
   private val typeUtils get() = processingEnv.typeUtils
   private val messenger get() = processingEnv.messager
@@ -38,7 +40,8 @@ class JARouterProcessor : AbstractProcessor() {
   override fun getSupportedAnnotationTypes(): MutableSet<String> {
     return mutableSetOf(
       CraneRoot::class.java.name,
-      RoutedBy::class.java.name
+      RoutedBy::class.java.name,
+      RouteRegistrar::class.java.name
     )
   }
 
@@ -77,7 +80,7 @@ class JARouterProcessor : AbstractProcessor() {
     val rootPackage = fetchRootPackage(roundEnv)
     if (rootPackage.isNotBlank() && registrars.isNotEmpty()) {
       deferredRoot = ""
-      buildRouterFile(registrars, rootPackage)
+      buildRouterFile(registrars.toSet(), rootPackage)
     }
   }
 
@@ -124,24 +127,16 @@ class JARouterProcessor : AbstractProcessor() {
     if (routes.isEmpty()) return null
     val className =
       "${RouteRegistrarGenerator.CLASS_NAME}_${routes.hashCode().absoluteValue}"
-    val file = FileBuilder.forClass(
-      processingEnv.kaptGeneratedSourcesDir,
-      RouteRegistrarGenerator.PACKAGE_NAME,
-      className
-    )
-    routeRegistrarGenerator.generate(file, className, routes)
+    val file = FileBuilder.srcDir(processingEnv.kaptGeneratedSourcesDir)
+    routeRegistrarBuilder.build(file, className, routes)
     return className
   }
 
-  private fun buildRouterFile(names: List<String>, rootPackage: String) {
+  private fun buildRouterFile(names: Set<String>, rootPackage: String) {
     if (names.isEmpty()) return
     if (rootPackage.isBlank()) return
-    val file = FileBuilder.forClass(
-      processingEnv.kaptGeneratedSourcesDir,
-      rootPackage,
-      RouterGenerator.CLASS_NAME
-    )
-    routerGenerator.generate(file, names, rootPackage)
+    val file = FileBuilder.srcDir(processingEnv.kaptGeneratedSourcesDir)
+    routerBuilder.build(file, names, rootPackage)
   }
 
   private fun isFragmentDeclaration(element: Element): Boolean {

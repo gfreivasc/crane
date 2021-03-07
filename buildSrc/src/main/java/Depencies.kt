@@ -4,6 +4,10 @@ object Versions {
     const val ksp = "1.4.30-dev-experimental-20210205"
   }
 
+  object Square {
+    const val kotlinPoet = "1.7.2"
+  }
+
   object Android {
     const val gradle = "4.1.2"
     const val appcompat = "1.2.0"
@@ -32,6 +36,10 @@ object Deps {
     const val classpath = "com.google.devtools.ksp:symbol-processing-gradle-plugin:${Versions.Kotlin.ksp}"
     const val api = "com.google.devtools.ksp:symbol-processing-api:${Versions.Kotlin.ksp}"
     const val impl = "com.google.devtools.ksp:symbol-processing:${Versions.Kotlin.ksp}"
+  }
+
+  object Square {
+    const val kotlinPoet = "com.squareup:kotlinpoet:${Versions.Square.kotlinPoet}"
   }
 
   object Android {
