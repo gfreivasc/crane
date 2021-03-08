@@ -16,4 +16,14 @@ object RouterEnv {
       "com.gabrielfv.crane.core",
       "RouteMap"
     )
+  val routeName get() =
+    ClassName(
+      "com.gabrielfv.crane.core",
+      "Route"
+    )
+  val fragmentName get() =
+    ClassName(
+      "androidx.fragment.app",
+      "Fragment"
+    )
 }

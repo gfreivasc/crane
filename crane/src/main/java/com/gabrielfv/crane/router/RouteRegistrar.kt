@@ -1,7 +1,9 @@
 package com.gabrielfv.crane.router
 
-import com.gabrielfv.crane.core.RouteMap
+import androidx.fragment.app.Fragment
+import com.gabrielfv.crane.core.Route
+import kotlin.reflect.KClass
 
 interface RouteRegistrar {
-  fun get(): RouteMap
+  fun get(): Map<KClass<out Route>, KClass<out Fragment>>
 }

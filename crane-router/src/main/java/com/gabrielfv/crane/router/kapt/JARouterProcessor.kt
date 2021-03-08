@@ -8,6 +8,7 @@ import com.gabrielfv.crane.router.RouteRegistrarGenerator
 import com.gabrielfv.crane.router.contains
 import com.gabrielfv.crane.router.e
 import com.gabrielfv.crane.router.generating.FileBuilder
+import com.gabrielfv.crane.router.generating.JavaRouteRegistrarBuilder
 import com.gabrielfv.crane.router.generating.RouteRegistrarBuilder
 import com.gabrielfv.crane.router.generating.RouterBuilder
 import com.gabrielfv.crane.router.kaptGeneratedSourcesDir
@@ -31,7 +32,7 @@ import kotlin.math.absoluteValue
 @AutoService(Processor::class)
 class JARouterProcessor : AbstractProcessor() {
   private val routerBuilder: RouterBuilder = RouterBuilder()
-  private val routeRegistrarBuilder: RouteRegistrarBuilder = RouteRegistrarBuilder()
+  private val routeRegistrarBuilder: RouteRegistrarBuilder = JavaRouteRegistrarBuilder()
   private val elementUtils get() = processingEnv.elementUtils
   private val typeUtils get() = processingEnv.typeUtils
   private val messenger get() = processingEnv.messager
@@ -56,27 +57,24 @@ class JARouterProcessor : AbstractProcessor() {
     annotations: MutableSet<out TypeElement>,
     roundEnv: RoundEnvironment
   ): Boolean {
-    val routes = processRoutes(roundEnv)
-    processRouter(roundEnv, routes)
+    processRoutes(roundEnv)
+    processRouter(roundEnv)
     return false
   }
 
-  private fun processRoutes(roundEnv: RoundEnvironment): String? {
+  private fun processRoutes(roundEnv: RoundEnvironment) {
     val elements = roundEnv.getElementsAnnotatedWith(RoutedBy::class.java)
     val routes = elements
       .filter(::isFragmentDeclaration)
       .map(::mapRoute)
       .toMap()
-    return buildRegistrarFile(routes)
+    buildRegistrarFile(routes)
   }
 
-  private fun processRouter(roundEnv: RoundEnvironment, recentRegistrar: String?) {
+  private fun processRouter(roundEnv: RoundEnvironment) {
     val registrars = fetchRegistrars()
       .map { it.simpleName.toString() }
       .toMutableList()
-    if (recentRegistrar != null) {
-      registrars.add(recentRegistrar)
-    }
     val rootPackage = fetchRootPackage(roundEnv)
     if (rootPackage.isNotBlank() && registrars.isNotEmpty()) {
       deferredRoot = ""
@@ -127,8 +125,7 @@ class JARouterProcessor : AbstractProcessor() {
     if (routes.isEmpty()) return null
     val className =
       "${RouteRegistrarGenerator.CLASS_NAME}_${routes.hashCode().absoluteValue}"
-    val file = FileBuilder.srcDir(processingEnv.kaptGeneratedSourcesDir)
-    routeRegistrarBuilder.build(file, className, routes)
+    routeRegistrarBuilder.build(processingEnv.filer, className, routes)
     return className
   }
 

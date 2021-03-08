@@ -6,6 +6,7 @@ object Versions {
 
   object Square {
     const val kotlinPoet = "1.7.2"
+    const val javaPoet = "1.13.0"
   }
 
   object Android {
@@ -40,6 +41,7 @@ object Deps {
 
   object Square {
     const val kotlinPoet = "com.squareup:kotlinpoet:${Versions.Square.kotlinPoet}"
+    const val javaPoet = "com.squareup:javapoet:${Versions.Square.javaPoet}"
   }
 
   object Android {

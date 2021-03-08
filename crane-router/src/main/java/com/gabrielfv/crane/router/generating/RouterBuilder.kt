@@ -53,7 +53,7 @@ internal class RouterBuilder {
           .addModifiers(KModifier.INLINE)
           .addCode("""
             |return setOf(
-            |  ${registrars.joinToString(",\n")}
+            |  ${registrars.joinToString(",\n")}()
             |)
            """.trimMargin())
           .build()

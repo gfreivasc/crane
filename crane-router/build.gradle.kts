@@ -1,7 +1,6 @@
 plugins {
   kotlin("jvm")
   kotlin("kapt")
-  id("com.google.devtools.ksp")
   id("maven-publish")
 }
 
@@ -13,11 +12,13 @@ dependencies {
   implementation(kotlin("stdlib"))
   implementation(Deps.KSP.api)
   implementation(Deps.GoogleAuto.serviceAnnotations)
-  implementation(Deps.Gradle.inCap)
   implementation(Deps.Square.kotlinPoet)
+  implementation(Deps.Square.javaPoet)
+  implementation(Deps.Gradle.inCap)
   compileOnly(Deps.KSP.impl)
+  compileOnly(Deps.GoogleAuto.service)
   kapt(Deps.Gradle.inCap)
-  ksp(Deps.GoogleAuto.serviceKsp)
+  kapt(Deps.GoogleAuto.service)
 
   testImplementation(Deps.KSP.impl)
   testImplementation(Deps.Testing.KotlinCompile.base)
