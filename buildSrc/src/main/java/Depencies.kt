@@ -15,6 +15,10 @@ object Versions {
     const val coreKtx = "1.3.2"
   }
 
+  object AndroidProcessing {
+    const val room = "2.3.0-beta02"
+  }
+
   object Testing {
     const val jUnit = "4.13.2"
     const val mockK = "1.10.6"
@@ -24,7 +28,7 @@ object Versions {
 
   object GoogleAuto {
     const val service = "1.0-rc7"
-    const val serviceKsp = "0.3.2"
+    const val common = "0.11"
   }
 
   object Gradle {
@@ -64,7 +68,11 @@ object Deps {
   object GoogleAuto {
     const val serviceAnnotations = "com.google.auto.service:auto-service-annotations:${Versions.GoogleAuto.service}"
     const val service = "com.google.auto.service:auto-service:${Versions.GoogleAuto.service}"
-    const val serviceKsp = "dev.zacsweers.autoservice:auto-service-ksp:${Versions.GoogleAuto.serviceKsp}"
+    const val common = "com.google.auto:auto-common:${Versions.GoogleAuto.common}"
+  }
+
+  object AndroidProcessing {
+    const val room = "androidx.room:room-compiler-processing:${Versions.AndroidProcessing.room}"
   }
 
   object Gradle {

@@ -1,5 +1,7 @@
 package com.gabrielfv.crane.router.generating
 
+import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.writeTo
 import com.gabrielfv.crane.annotations.internal.RouteRegistrar
 import com.gabrielfv.crane.router.RouterEnv
 import com.squareup.javapoet.JavaFile
@@ -8,7 +10,6 @@ import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.WildcardTypeName
 import org.jetbrains.annotations.NotNull
-import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
 import kotlin.reflect.KClass
 
@@ -31,7 +32,7 @@ class JavaRouteRegistrarBuilder : RouteRegistrarBuilder {
   }
 
   override fun build(
-    filer: Filer,
+    filer: XFiler,
     className: String,
     routes: Map<String, String>
   ) {

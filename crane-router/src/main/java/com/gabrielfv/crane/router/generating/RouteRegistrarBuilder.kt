@@ -1,11 +1,11 @@
 package com.gabrielfv.crane.router.generating
 
-import javax.annotation.processing.Filer
+import androidx.room.compiler.processing.XFiler
 
 interface RouteRegistrarBuilder {
 
   fun build(
-    filer: Filer,
+    filer: XFiler,
     className: String,
     routes: Map<String, String>
   )

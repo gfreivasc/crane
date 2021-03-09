@@ -1,17 +1,18 @@
 package com.gabrielfv.crane.router.generating
 
+import androidx.room.compiler.processing.XFiler
 import com.gabrielfv.crane.annotations.internal.RouteRegistrar
 import com.gabrielfv.crane.router.RouterEnv
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.TypeSpec
-import javax.annotation.processing.Filer
 
+// Waiting on https://issuetracker.google.com/issues/182195680
 class KtRouteRegistrarBuilder : RouteRegistrarBuilder {
 
   override fun build(
-    filer: Filer,
+    filer: XFiler,
     className: String,
     routes: Map<String, String>
   ) {
@@ -35,6 +36,5 @@ class KtRouteRegistrarBuilder : RouteRegistrarBuilder {
     fileBuilder
       .addType(registrar)
       .build()
-      .writeTo(filer)
   }
 }

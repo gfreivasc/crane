@@ -14,6 +14,7 @@ allprojects {
   repositories {
     google()
     jcenter()
+    maven { setUrl("/Users/gabriel.vasconcelos/ASProjects/androidx/build/support_repo/") }
   }
 }
 
