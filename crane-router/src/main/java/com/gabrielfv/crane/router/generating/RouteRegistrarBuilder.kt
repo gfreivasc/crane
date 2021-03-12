@@ -2,7 +2,7 @@ package com.gabrielfv.crane.router.generating
 
 import androidx.room.compiler.processing.XFiler
 
-interface RouteRegistrarBuilder {
+internal interface RouteRegistrarBuilder {
 
   fun build(
     filer: XFiler,

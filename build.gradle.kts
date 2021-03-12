@@ -14,7 +14,7 @@ allprojects {
   repositories {
     google()
     jcenter()
-    maven { setUrl("/Users/gabriel.vasconcelos/ASProjects/androidx/build/support_repo/") }
+    maven { setUrl("https://androidx.dev/snapshots/builds/7204104/artifacts/repository") }
   }
 }
 

@@ -1,5 +1,7 @@
 package com.gabrielfv.crane.router
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XMessager
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
@@ -17,6 +19,10 @@ fun Messager.e(message: String, element: Element? = null) {
   } else {
     printMessage(Diagnostic.Kind.ERROR, message)
   }
+}
+
+fun XMessager.e(message: String, element: XElement? = null) {
+  printMessage(Diagnostic.Kind.ERROR, message, element)
 }
 
 fun Messager.d(message: String, element: Element? = null) {

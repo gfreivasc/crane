@@ -6,12 +6,14 @@ import androidx.room.compiler.processing.XProcessingStep
 import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.isTypeElement
 import com.gabrielfv.crane.annotations.RoutedBy
-import com.gabrielfv.crane.router.generating.JavaRouteRegistrarBuilder
 import com.gabrielfv.crane.router.generating.RouteRegistrarBuilder
+import javax.tools.Diagnostic
 import kotlin.math.absoluteValue
 import kotlin.reflect.KClass
 
-class RoutingStep : XProcessingStep {
+internal class RoutingStep(
+  private val registrarBuilder: RouteRegistrarBuilder
+) : XProcessingStep {
 
   companion object {
     const val ANNOTATION_VALUE_METHOD = "value"
@@ -30,7 +32,7 @@ class RoutingStep : XProcessingStep {
       ?.filter(::isFragmentDeclaration)
       ?.map(::routeFor)
       ?.toMap() ?: emptyMap()
-    buildRegistrar(env.registrarBuilder, env.filer, routes)
+    buildRegistrar(registrarBuilder, env.filer, routes)
     return emptySet()
   }
 
@@ -39,7 +41,7 @@ class RoutingStep : XProcessingStep {
       ?.getAsType(ANNOTATION_VALUE_METHOD)
       ?.typeName
       ?.toString()
-    val target = element.qualifiedName
+    val target = element.className.canonicalName()
     return route!! to target
   }
 
@@ -61,16 +63,7 @@ class RoutingStep : XProcessingStep {
   ) {
     if (routes.isEmpty()) return
     val className =
-      "${RouteRegistrarGenerator.CLASS_NAME}_${routes.hashCode().absoluteValue}"
+      "${RouterEnv.registrarInterfaceName.simpleName}_${routes.hashCode().absoluteValue}"
     builder.build(filer, className, routes)
   }
-
-  private val XProcessingEnv.registrarBuilder: RouteRegistrarBuilder get() =
-    when (backend) {
-      XProcessingEnv.Backend.JAVAC -> JavaRouteRegistrarBuilder()
-      /* TODO: replace with KtRouteRegistrarBuilder
-       * Depends on: https://issuetracker.google.com/issues/182195680
-       */
-      XProcessingEnv.Backend.KSP -> JavaRouteRegistrarBuilder()
-    }
 }

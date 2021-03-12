@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull
 import javax.lang.model.element.Modifier
 import kotlin.reflect.KClass
 
-class JavaRouteRegistrarBuilder : RouteRegistrarBuilder {
+internal class JavaRouteRegistrarBuilder : RouteRegistrarBuilder {
   private val routeMap get() = ParameterizedTypeName
     .get(
       Map::class.jClassName,

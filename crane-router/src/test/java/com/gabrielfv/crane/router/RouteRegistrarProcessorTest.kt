@@ -1,5 +1,6 @@
 package com.gabrielfv.crane.router
 
+import com.gabrielfv.crane.router.ksp.KspRouterProcessor
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.SourceFile.Companion.kotlin
@@ -119,7 +120,7 @@ class RouteRegistrarProcessorTest {
       .apply {
         workingDir = temporaryFolder.root
         inheritClassPath = true
-        symbolProcessors = listOf(RouteRegistrarProcessor())
+        symbolProcessors = listOf(KspRouterProcessor())
         sources = sourceFiles.asList()
         verbose = false
       }.compile()

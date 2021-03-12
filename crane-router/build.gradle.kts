@@ -7,6 +7,10 @@ plugins {
 group = project.findProperty("library.groupId") as String
 version = project.findProperty("library.version") as String
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+  kotlinOptions.freeCompilerArgs += "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi"
+}
+
 dependencies {
   implementation(project(":crane-annotations"))
   implementation(kotlin("stdlib"))

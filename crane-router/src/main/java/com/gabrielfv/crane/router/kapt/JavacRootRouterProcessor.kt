@@ -3,7 +3,7 @@ package com.gabrielfv.crane.router.kapt
 import com.gabrielfv.crane.annotations.CraneRoot
 import com.gabrielfv.crane.annotations.internal.RouteRegistrar
 import com.gabrielfv.crane.router.KAPT_KOTLIN_GENERATED
-import com.gabrielfv.crane.router.RouteRegistrarGenerator
+import com.gabrielfv.crane.router.RouterEnv
 import com.gabrielfv.crane.router.e
 import com.gabrielfv.crane.router.generating.FileBuilder
 import com.gabrielfv.crane.router.generating.RouterBuilder
@@ -21,13 +21,13 @@ import javax.lang.model.element.TypeElement
 
 
 /**
- * This will become an XStep if we're able to wire it to KotlinPoet
- * https://issuetracker.google.com/issues/182195680
+ * This will become an XStep if we're able to use indirection with Room Processing and KSP.
+ * https://github.com/google/ksp/issues/344
  */
 @IncrementalAnnotationProcessor(ISOLATING)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor::class)
-class JARootRouterProcessor : AbstractProcessor() {
+class JavacRootRouterProcessor : AbstractProcessor() {
   private val builder: RouterBuilder = RouterBuilder()
   private val elementUtils get() = processingEnv.elementUtils
   private val messenger get() = processingEnv.messager
@@ -65,7 +65,9 @@ class JARootRouterProcessor : AbstractProcessor() {
   private fun fetchRootPackage(roundEnv: RoundEnvironment): String {
     val root = roundEnv.getElementsAnnotatedWith(CraneRoot::class.java)
     if (root.isEmpty()) return deferredRoot
-    else if (root.size > 1) messenger.e("Multiple ${CraneRoot::class.java.simpleName} found")
+    else if (root.size > 1) {
+      messenger.e("Multiple ${CraneRoot::class.java.simpleName} found")
+    }
     return elementUtils.getPackageOf(root.first())
       .qualifiedName
       .toString()
@@ -74,7 +76,7 @@ class JARootRouterProcessor : AbstractProcessor() {
 
   private fun fetchRegistrars(): Set<Element> =
     processingEnv.elementUtils
-      .getPackageElement(RouteRegistrarGenerator.PACKAGE_NAME)
+      .getPackageElement(RouterEnv.REGISTRARS_PACKAGE)
       ?.let { pkg ->
         pkg.enclosedElements
           .filter { it.getAnnotation(RouteRegistrar::class.java) != null }

@@ -2,7 +2,7 @@ package com.gabrielfv.crane.router
 
 import com.squareup.kotlinpoet.ClassName
 
-object RouterEnv {
+internal object RouterEnv {
   const val ROUTER_CLASS = "Router"
   const val GETTER_METHOD = "get"
   const val REGISTRARS_PACKAGE = "com.gabrielfv.crane.routes.registrar"

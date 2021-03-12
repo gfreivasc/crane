@@ -16,7 +16,7 @@ object Versions {
   }
 
   object AndroidProcessing {
-    const val room = "2.3.0-beta02"
+    const val room = "2.4.0-SNAPSHOT"
   }
 
   object Testing {
@@ -73,6 +73,7 @@ object Deps {
 
   object AndroidProcessing {
     const val room = "androidx.room:room-compiler-processing:${Versions.AndroidProcessing.room}"
+    const val roomTesting = "androidx.room:room-compiler-processing-testing:${Versions.AndroidProcessing.room}"
   }
 
   object Gradle {

@@ -1,5 +1,7 @@
 package com.gabrielfv.crane.router.generating
 
+import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.writeTo
 import com.gabrielfv.crane.router.RouterEnv
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
@@ -23,6 +25,18 @@ internal class RouterBuilder {
     registrars: Set<String>,
     pkg: String
   ) {
+    buildSpec(registrars, pkg).writeTo(dir)
+  }
+
+  fun build(
+    filer: XFiler,
+    registrars: Set<String>,
+    pkg: String
+  ) {
+    buildSpec(registrars, pkg).writeTo(filer)
+  }
+
+  private fun buildSpec(registrars: Set<String>, pkg: String): FileSpec {
     val fileBuilder = FileSpec.builder(pkg, className)
     val registrarsProp = buildRegistrarsProp(
       registrars.map { name ->
@@ -35,10 +49,9 @@ internal class RouterBuilder {
       .addProperty(registrarsProp)
       .addFunction(getMethod)
       .build()
-    fileBuilder
+    return fileBuilder
       .addType(router)
       .build()
-      .writeTo(dir)
   }
 
   private fun buildRegistrarsProp(registrars: Set<ClassName>): PropertySpec =

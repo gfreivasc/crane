@@ -1,7 +1,7 @@
 plugins {
   id("com.android.application")
   kotlin("android")
-  kotlin("kapt")
+//  kotlin("kapt")
   id("kotlin-parcelize")
   id("com.google.devtools.ksp")
 }
@@ -48,14 +48,14 @@ android {
 
 dependencies {
   implementation(project(":crane"))
-  implementation(project(":crane-router"))
-  kapt(project(":crane-router"))
+  implementation(project(":crane-annotations"))
+  ksp(project(":crane-router"))
 
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.30")
+  implementation(kotlin("stdlib"))
   implementation("androidx.core:core-ktx:1.3.2")
   implementation("androidx.appcompat:appcompat:1.2.0")
   implementation("com.google.android.material:material:1.3.0")
-  implementation("androidx.fragment:fragment-ktx:1.3.0")
+  implementation("androidx.fragment:fragment-ktx:1.3.1")
   implementation("androidx.constraintlayout:constraintlayout:2.0.4")
   testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.1.2")
