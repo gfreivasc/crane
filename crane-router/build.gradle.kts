@@ -15,6 +15,7 @@ dependencies {
   implementation(project(":crane-annotations"))
   implementation(kotlin("stdlib"))
   implementation(Deps.KSP.api)
+  implementation(kotlin("compiler-embeddable"))
   implementation(Deps.AndroidProcessing.room)
   implementation(Deps.GoogleAuto.serviceAnnotations)
   implementation(Deps.GoogleAuto.common)

@@ -1,7 +1,7 @@
 object Versions {
   object Kotlin {
     const val lang = "1.4.30"
-    const val ksp = "1.4.30-dev-experimental-20210205"
+    const val ksp = "1.4.30-1.0.0-alpha05"
   }
 
   object Square {

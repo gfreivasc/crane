@@ -22,7 +22,7 @@ class JavacRouterProcessor : BasicAnnotationProcessor() {
   override fun initSteps(): MutableIterable<ProcessingStep> {
     return mutableSetOf(
       RoutingStep(routeRegistrarBuilder)
-        .asAutoCommonProcessor(processingEnv)
+        .asAutoCommonProcessor(processingEnv),
     )
   }
 

@@ -5,6 +5,7 @@ import com.gabrielfv.crane.router.ConfinedRegistrarFetcher
 import com.gabrielfv.crane.router.RegistrarFetcher
 import com.gabrielfv.crane.router.RouterWiringStep
 import com.gabrielfv.crane.router.RoutingStep
+import com.gabrielfv.crane.router.executeInKsp
 import com.gabrielfv.crane.router.generating.KtRouteRegistrarBuilder
 import com.gabrielfv.crane.router.generating.RouteRegistrarBuilder
 import com.gabrielfv.crane.router.generating.RouterBuilder
@@ -22,12 +23,12 @@ class KspRouterProcessor : SymbolProcessor {
   // There's currently no API for indirection fetching in KSP
   // See https://github.com/google/ksp/issues/344
   private val registrarFetcher: RegistrarFetcher = ConfinedRegistrarFetcher()
-  // This step is stateful until we're able to defer step to later rounds
-  private val routerWiringStep: RouterWiringStep = RouterWiringStep(registrarFetcher, routerBuilder)
   private lateinit var codeGenerator: CodeGenerator
-  private lateinit var logger: KSPLogger
+  private lateinit var logger: CraneKSPLogger
 
-  override fun finish() { }
+  override fun finish() {
+    logger.reportErrors()
+  }
 
   override fun init(
     options: Map<String, String>,
@@ -36,7 +37,7 @@ class KspRouterProcessor : SymbolProcessor {
     logger: KSPLogger
   ) {
     this.codeGenerator = codeGenerator
-    this.logger = logger
+    this.logger = CraneKSPLogger(logger)
   }
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
@@ -49,8 +50,7 @@ class KspRouterProcessor : SymbolProcessor {
 
     RoutingStep(routeRegistrarBuilder)
       .executeInKsp(processingEnv)
-    routerWiringStep
-      .executeInKsp(processingEnv)
-    return emptyList()
+    return RouterWiringStep(registrarFetcher, routerBuilder)
+      .executeInKsp(processingEnv, resolver)
   }
 }

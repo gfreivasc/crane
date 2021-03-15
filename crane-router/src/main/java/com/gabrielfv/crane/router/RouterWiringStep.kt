@@ -6,16 +6,12 @@ import androidx.room.compiler.processing.XTypeElement
 import com.gabrielfv.crane.annotations.CraneRoot
 import com.gabrielfv.crane.annotations.internal.RouteRegistrar
 import com.gabrielfv.crane.router.generating.RouterBuilder
-import javax.tools.Diagnostic
 import kotlin.reflect.KClass
 
 internal class RouterWiringStep(
   private val registrarFetcher: RegistrarFetcher,
   private val routerBuilder: RouterBuilder
 ) : XProcessingStep {
-  // XProcessingStep won't have their unprocessed elements
-  // deferred for KSP.
-  private var deferredRoot: XTypeElement? = null
 
   override fun annotations(): Set<KClass<out Annotation>> {
     return setOf(
@@ -44,8 +40,6 @@ internal class RouterWiringStep(
       "Multiple ${CraneRoot::class.java.simpleName} found"
     )
     return annotated.firstOrNull()
-      ?.also { deferredRoot = it }
-      ?: deferredRoot
   }
 
   private fun buildRouter(
@@ -53,7 +47,6 @@ internal class RouterWiringStep(
     root: XTypeElement,
     registrars: Set<XTypeElement>
   ) {
-    deferredRoot = null
     val pkg = root.packageName
     val registrarNames = registrars
       .map { it.className.simpleName() }

@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/crane" />
             <option value="$PROJECT_DIR$/crane-annotations" />
             <option value="$PROJECT_DIR$/crane-router" />
+            <option value="$PROJECT_DIR$/crane-router-tests" />
             <option value="$PROJECT_DIR$/samples" />
             <option value="$PROJECT_DIR$/samples/basic" />
             <option value="$PROJECT_DIR$/samples/router" />

@@ -7,12 +7,11 @@ import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.isTypeElement
 import com.gabrielfv.crane.annotations.RoutedBy
 import com.gabrielfv.crane.router.generating.RouteRegistrarBuilder
-import javax.tools.Diagnostic
 import kotlin.math.absoluteValue
 import kotlin.reflect.KClass
 
 internal class RoutingStep(
-  private val registrarBuilder: RouteRegistrarBuilder
+  private val registrarBuilder: RouteRegistrarBuilder,
 ) : XProcessingStep {
 
   companion object {
@@ -28,12 +27,32 @@ internal class RoutingStep(
     elementsByAnnotation: Map<KClass<out Annotation>, List<XTypeElement>>
   ): Set<XTypeElement> {
     val elements = elementsByAnnotation[RoutedBy::class]
-    val routes = elements
-      ?.filter(::isFragmentDeclaration)
-      ?.map(::routeFor)
-      ?.toMap() ?: emptyMap()
+      ?.filter { element ->
+        val valid = isFragmentDeclaration(element)
+        env.messager.check(valid) {
+          "@RoutedBy should only be used against " +
+            "${RouterEnv.fragmentName.canonicalName} instances"
+        }
+        valid
+      } ?: emptyList()
+    val routes = mapRoutes(env, elements)
     buildRegistrar(registrarBuilder, env.filer, routes)
     return emptySet()
+  }
+
+  private fun mapRoutes(
+    env: XProcessingEnv,
+    elements: List<XTypeElement>
+  ): Map<String, String> {
+    val mutableRoutes = mutableMapOf<String, String>()
+    elements.forEach { element ->
+      val pairing = routeFor(element)
+      env.messager.check(!mutableRoutes.containsKey(pairing.first), element) {
+        "Route ${pairing.first} is routing multiple different fragments."
+      }
+      mutableRoutes[pairing.first] = pairing.second
+    }
+    return mutableRoutes
   }
 
   private fun routeFor(element: XTypeElement): Pair<String, String> {
@@ -53,6 +72,7 @@ internal class RoutingStep(
       }
       sup = sup.typeElement?.superType
     }
+
     return false
   }
 
