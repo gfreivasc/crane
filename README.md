@@ -23,13 +23,15 @@ And finally include Crane artifacts to your project (for enabling KSP, [see this
 
 ```kotlin
 // Any project module "build.gradle.kts"
+// For version, see JitPack badge
 dependencies {
-    implementation("com.gabrielfv.crane:crane:trunk-SNAPSHOT")
+    val craneVersion = "0.1.0"
+    implementation("com.gabrielfv.crane:crane:$craneVersion")
     // For automatic routing
-    implementation("com.gabrielfv.crane:crane-annotations:trunk-SNAPSHOT")
-    kapt("com.gabrielfv.crane:crane-router:trunk-SNAPSHOT")
-    // With ksp (currently only supporting single module) use this instead of kapt
-    ksp("com.gabrielfv.crane:crane-router:trunk-SNAPSHOT")
+    implementation("com.gabrielfv.crane:crane-annotations:$craneVersion")
+    kapt("com.gabrielfv.crane:crane-router:$craneVersion")
+    // For routing with ksp (currently only supporting single module) use this instead
+    ksp("com.gabrielfv.crane:crane-router:$craneVersion")
 }
 ```
 
