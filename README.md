@@ -1,5 +1,6 @@
 # Crane
 
+[![](https://circleci.com/gh/gfreivasc/crane.svg?style=shield)](https://circleci.com/gh/gfreivasc/crane)
 [![](https://jitpack.io/v/com.gabrielfv/crane.svg)](https://jitpack.io/#com.gabrielfv/crane)
 
 A fully programatic, type-safe navigation solution for Android development, focused on multi-modular navigation.
