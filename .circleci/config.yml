@@ -6,18 +6,17 @@ orbs:
   android: circleci/android@1.0.3
 
 jobs:
-  build-and-test:  
-    # These next lines define the Android machine image executor: https://circleci.com/docs/2.0/executor-types/
+  build-and-test:
+    # The "android/android" uses a medium resource
     executor:
-      name: android/android-machine
+      name: android/android
 
-    # TODO: Add linter
     steps:
       - checkout
       - android/run-tests:
           test-command: ./gradlew testDebug
 
 workflows:
-  sample: 
+  debug:
     jobs:
       - build-and-test
