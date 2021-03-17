@@ -1,7 +1,7 @@
 # Crane
 
 [![](https://circleci.com/gh/gfreivasc/crane.svg?style=shield)](https://circleci.com/gh/gfreivasc/crane)
-[![](https://jitpack.io/v/com.gabrielfv/crane.svg)](https://jitpack.io/#com.gabrielfv/crane)
+[![](https://jitpack.io/v/com.gabrielfv.crane/crane.svg)](https://jitpack.io/#com.gabrielfv.crane/crane)
 
 A fully programatic, type-safe navigation solution for Android development, focused on multi-modular navigation.
 
@@ -25,7 +25,7 @@ And finally include Crane artifacts to your project (for enabling KSP, [see this
 // Any project module "build.gradle.kts"
 // For version, see JitPack badge
 dependencies {
-    val craneVersion = "0.1.0"
+    val craneVersion = "0.2.0"
     implementation("com.gabrielfv.crane:crane:$craneVersion")
     // For automatic routing
     implementation("com.gabrielfv.crane:crane-annotations:$craneVersion")
