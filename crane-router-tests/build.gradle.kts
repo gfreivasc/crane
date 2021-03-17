@@ -7,8 +7,8 @@ plugins {
 
 android {
   defaultConfig {
-    compileSdk = 31
-    targetSdk = 31
+    compileSdk = 30
+    targetSdk = 30
     minSdk = 1
   }
 }
@@ -24,7 +24,7 @@ dependencies {
   implementation(Deps.Testing.KotlinCompile.base)
   implementation(Deps.Testing.KotlinCompile.ksp)
   implementation(Deps.Testing.jUnit)
+  implementation(Deps.Testing.assertJ)
 
   testImplementation(Deps.KSP.impl)
-  testImplementation(Deps.Testing.assertJ)
 }

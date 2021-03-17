@@ -23,7 +23,7 @@ object Versions {
     const val jUnit = "4.13.2"
     const val mockK = "1.10.6"
     const val assertJ = "3.19.0"
-    const val kotlinCompile = "1.3.5"
+    const val kotlinCompile = "1.3.6"
   }
 
   object GoogleAuto {

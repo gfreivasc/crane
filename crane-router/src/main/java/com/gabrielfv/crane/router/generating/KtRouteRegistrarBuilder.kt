@@ -1,6 +1,7 @@
 package com.gabrielfv.crane.router.generating
 
 import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.writeTo
 import com.gabrielfv.crane.annotations.internal.RouteRegistrar
 import com.gabrielfv.crane.router.RouterEnv
@@ -14,7 +15,8 @@ class KtRouteRegistrarBuilder : RouteRegistrarBuilder {
   override fun build(
     filer: XFiler,
     className: String,
-    routes: Map<String, String>
+    routes: Map<String, String>,
+    originating: Set<XTypeElement>
   ) {
     if (routes.isEmpty()) return
     val fileBuilder = FileSpec.builder(RouterEnv.REGISTRARS_PACKAGE, className)

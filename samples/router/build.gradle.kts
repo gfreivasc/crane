@@ -1,9 +1,9 @@
 plugins {
   id("com.android.application")
   kotlin("android")
-  kotlin("kapt")
+//  kotlin("kapt")
   id("kotlin-parcelize")
-//  id("com.google.devtools.ksp")
+  id("com.google.devtools.ksp")
 }
 
 android {
@@ -49,7 +49,7 @@ android {
 dependencies {
   implementation(project(":crane"))
   implementation(project(":crane-annotations"))
-  kapt(project(":crane-router"))
+  ksp(project(":crane-router"))
 
   implementation(kotlin("stdlib"))
   implementation("androidx.core:core-ktx:1.3.2")

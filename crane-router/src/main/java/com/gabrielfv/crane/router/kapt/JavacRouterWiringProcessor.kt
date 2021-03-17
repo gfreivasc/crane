@@ -30,7 +30,7 @@ import javax.lang.model.element.Element
 @IncrementalAnnotationProcessor(ISOLATING)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor::class)
-class JavacRouteWiringProcessor : BasicAnnotationProcessor() {
+class JavacRouterWiringProcessor : BasicAnnotationProcessor() {
   private val builder: RouterBuilder = RouterBuilder()
 
   override fun steps(): MutableIterable<BasicAnnotationProcessor.Step> {
@@ -63,11 +63,13 @@ class JavacRouteWiringProcessor : BasicAnnotationProcessor() {
         .map { it.simpleName.toString() }
         .toSet()
       val rootPackage = fetchRootPackage(elementsByAnnotation)
-      return if (rootPackage != null && registrars.isNotEmpty()) {
-        buildRouterFile(registrars, rootPackage.second)
-        mutableSetOf()
-      } else if (rootPackage != null) {
-        mutableSetOf(rootPackage.first)
+      return if (rootPackage != null) {
+        if (registrars.isNotEmpty()) {
+          buildRouterFile(registrars, rootPackage.second)
+          mutableSetOf()
+        } else {
+          mutableSetOf(rootPackage.first)
+        }
       } else {
         mutableSetOf()
       }

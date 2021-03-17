@@ -1,7 +1,6 @@
 package com.gabrielfv.crane.core
 
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -9,7 +8,6 @@ import com.gabrielfv.crane.A
 import com.gabrielfv.crane.AFragment
 import com.gabrielfv.crane.core.affinity.AffinityManager
 import com.gabrielfv.crane.core.result.ResultRegistry
-import com.gabrielfv.crane.testFragmentFactory
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

@@ -29,39 +29,41 @@ internal class RoutingStep(
     val elements = elementsByAnnotation[RoutedBy::class]
       ?.filter { element ->
         val valid = isFragmentDeclaration(element)
-        env.messager.check(valid) {
+        env.messager.check(valid, element) {
           "@RoutedBy should only be used against " +
             "${RouterEnv.fragmentName.canonicalName} instances"
         }
         valid
       } ?: emptyList()
-    val routes = mapRoutes(env, elements)
-    buildRegistrar(registrarBuilder, env.filer, routes)
+    val (originating, routes) = mapRoutes(env, elements)
+    buildRegistrar(registrarBuilder, env.filer, routes, originating.toSet())
     return emptySet()
   }
 
   private fun mapRoutes(
     env: XProcessingEnv,
     elements: List<XTypeElement>
-  ): Map<String, String> {
+  ): Pair<List<XTypeElement>, Map<String, String>> {
     val mutableRoutes = mutableMapOf<String, String>()
+    val originatingElements = mutableListOf<XTypeElement>()
     elements.forEach { element ->
-      val pairing = routeFor(element)
-      env.messager.check(!mutableRoutes.containsKey(pairing.first), element) {
-        "Route ${pairing.first} is routing multiple different fragments."
+      val (originating, route) = routeFor(element)
+      env.messager.check(!mutableRoutes.containsKey(route.first), element) {
+        "Route ${route.first} is routing multiple different fragments."
       }
-      mutableRoutes[pairing.first] = pairing.second
+      originatingElements.add(originating)
+      mutableRoutes[route.first] = route.second
     }
-    return mutableRoutes
+    return originatingElements to mutableRoutes
   }
 
-  private fun routeFor(element: XTypeElement): Pair<String, String> {
+  private fun routeFor(element: XTypeElement): ElementRoute {
     val route = element.toAnnotationBox(RoutedBy::class)
       ?.getAsType(ANNOTATION_VALUE_METHOD)
       ?.typeName
-      ?.toString()
+      ?.toString() ?: "<ERROR>"
     val target = element.className.canonicalName()
-    return route!! to target
+    return ElementRoute(element, route to target)
   }
 
   private fun isFragmentDeclaration(element: XTypeElement): Boolean {
@@ -79,11 +81,17 @@ internal class RoutingStep(
   private fun buildRegistrar(
     builder: RouteRegistrarBuilder,
     filer: XFiler,
-    routes: Map<String, String>
+    routes: Map<String, String>,
+    originating: Set<XTypeElement>
   ) {
     if (routes.isEmpty()) return
     val className =
       "${RouterEnv.registrarInterfaceName.simpleName}_${routes.hashCode().absoluteValue}"
-    builder.build(filer, className, routes)
+    builder.build(filer, className, routes, originating)
   }
+
+  private data class ElementRoute(
+    val originating: XTypeElement,
+    val route: Pair<String, String>
+  )
 }

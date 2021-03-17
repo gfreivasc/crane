@@ -1,6 +1,8 @@
 package com.gabrielfv.crane.router.generating
 
 import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.addOriginatingElement
 import androidx.room.compiler.processing.writeTo
 import com.gabrielfv.crane.annotations.internal.RouteRegistrar
 import com.gabrielfv.crane.router.RouterEnv
@@ -34,10 +36,16 @@ internal class JavaRouteRegistrarBuilder : RouteRegistrarBuilder {
   override fun build(
     filer: XFiler,
     className: String,
-    routes: Map<String, String>
+    routes: Map<String, String>,
+    originating: Set<XTypeElement>
   ) {
     if (routes.isEmpty()) return
     val registrar = TypeSpec.classBuilder(className)
+      .apply {
+        originating.forEach {
+          addOriginatingElement(it)
+        }
+      }
       .addAnnotation(RouteRegistrar::class.java)
       .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
       .addSuperinterface(RouterEnv.registrarInterfaceName.toJava())

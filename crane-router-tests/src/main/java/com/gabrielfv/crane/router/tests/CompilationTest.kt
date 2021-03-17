@@ -36,8 +36,11 @@ abstract class CompilationTest(
       .apply {
         workingDir = folder
         inheritClassPath = true
-        symbolProcessors = kspProcessors
-        annotationProcessors = kaptProcessors.asProcessorList
+        if (kspProcessors.isNotEmpty()) {
+          symbolProcessors = kspProcessors
+        } else if (kaptProcessors.isNotEmpty()) {
+          annotationProcessors = kaptProcessors.asProcessorList
+        }
         sources = sourceFiles.asList()
         verbose = false
         kspIncremental = true
