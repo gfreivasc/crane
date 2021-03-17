@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.gabrielfv.basicsample.collapsibleflow.CollapsibleResult
+import com.gabrielfv.crane.core.Crane
 import com.gabrielfv.crane.core.Route
 import com.gabrielfv.crane.ktx.params
 import kotlinx.parcelize.Parcelize
@@ -16,7 +17,7 @@ import kotlinx.parcelize.Parcelize
 data class FirstRoute(val name: String) : Route
 
 class FirstFragment : Fragment() {
-  private val crane by lazy { NavRegistry.crane }
+  private val crane by lazy { Crane.getInstance() }
   private val params: FirstRoute by params()
   private var count: Int = 0
   private var confirmedAge: Int? = null

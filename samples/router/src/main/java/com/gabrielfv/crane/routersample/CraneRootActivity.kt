@@ -14,12 +14,10 @@ class CraneRootActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     val binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
-    crane = Crane.Builder()
-      .create(this, android.R.id.content)
-      .map(Router.get())
-      .root(ARoute())
-      .build()
-    NavReg.crane = crane
+    crane = Crane.init(this, android.R.id.content) {
+      map(Router.get())
+      root(ARoute())
+    }
   }
 
   override fun onBackPressed() {

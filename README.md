@@ -81,13 +81,12 @@ class NavRootActivity : AppCompatActivity {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        crane = Crane.Builder()
-            .create(this, android.R.id.content)
-            .map(routeMap)
-            .root(HomeRoute("Our App Title")) // Must have
+        crane = Crane.init(this, android.R.id.content) {
+            map(routeMap)
+            root(HomeRoute("Our App Title")) // Must have
             // Tell Crane to check for state to restore
-            .savedState(savedInstanceState)
-            .build()
+            savedState(savedInstanceState)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -124,11 +123,10 @@ class NavRootActivity : AppCompatActivity {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        crane = Crane.Builder()
-            .create(this, android.R.id.content)
-            .map(Router.get())
-            // ...
-            .build()
+        crane = Crane.init(this, android.R.id.content) {
+            create(this, android.R.id.content)
+            map(Router.get())
+        }
     }
 }
 ```

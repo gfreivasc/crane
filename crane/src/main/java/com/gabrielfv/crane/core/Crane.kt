@@ -3,6 +3,7 @@ package com.gabrielfv.crane.core
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.annotation.IdRes
+import androidx.annotation.MainThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -26,34 +27,46 @@ class Crane internal constructor(
 ) {
   private val fragmentManager = rootActivity.supportFragmentManager
   private var stackRecord: Int = fragmentManager.backStackEntryCount
-  private val saveables = setOf(affinityManager, resultRegistry)
+  private val saved get() = setOf(affinityManager, resultRegistry)
+
+  companion object : CraneRegistry by CraneRegistry.Default() {
+    internal const val ROOT_AFFINITY_TAG = "com.gabrielfv.crane.ROOT_AFFINITY_TAG"
+    internal const val KEY_CRANE_PARAMS = "com.gabrielfv.crane.KEY_CRANE_PARAMS"
+  }
 
   internal fun setRoot(route: Route) {
-    affinityManager.push(ROOT_AFFINITY_TAG)
-    if (stackRecord > 0) return
-
-    val fragment = fetchFragment(route)
-    fragment.placeKey(route)
-    fragmentManager.transaction {
-      addToBackStack(ROOT_AFFINITY_TAG)
-      replace(containerViewId, fragment)
-      stackRecord++
+    val tag = ROOT_AFFINITY_TAG
+    if (stackRecord > 0) {
+      affinityManager.push(tag)
+    } else {
+      push(route, tag = tag)
     }
   }
 
+  @MainThread
   fun push(route: Route, customAnimations: FragmentAnimation = FragmentAnimation()) {
     if (stackRecord == 0) {
       setRoot(route)
       return
     }
+    val tag = if (route is AffinityRoute) {
+      route.tag
+    } else {
+      null
+    }
+    push(route, customAnimations, tag)
+  }
+
+  private fun push(
+    route: Route,
+    customAnimations: FragmentAnimation? = null,
+    tag: String? = null
+  ) {
     val fragment = fetchFragment(route)
     fragment.placeKey(route)
     fragmentManager.transaction {
-      setCustomAnimations(customAnimations)
-      val tag = if (route is AffinityRoute) {
-        route.tag
-      } else {
-        null
+      if (customAnimations != null)  {
+        setCustomAnimations(customAnimations)
       }
       affinityManager.push(tag)
       addToBackStack(tag)
@@ -62,6 +75,7 @@ class Crane internal constructor(
     }
   }
 
+  @MainThread
   fun pop(): Boolean {
     if (stackRecord == 0) return false
     affinityManager.popRegular()
@@ -110,16 +124,11 @@ class Crane internal constructor(
   fun <T : Parcelable> fetchResult(cls: KClass<T>): T? = resultRegistry.fetch(cls)
 
   fun saveInstanceState(outState: Bundle) {
-    saveables.forEach { it.save(outState) }
+    saved.forEach { it.save(outState) }
   }
 
   fun restoreSavedState(savedInstanceState: Bundle) {
-    saveables.forEach { it.restore(savedInstanceState) }
-  }
-
-  companion object {
-    internal const val ROOT_AFFINITY_TAG = "com.gabrielfv.crane.ROOT_AFFINITY_TAG"
-    internal const val KEY_CRANE_PARAMS = "com.gabrielfv.crane.KEY_CRANE_PARAMS"
+    saved.forEach { it.restore(savedInstanceState) }
   }
 
   class Builder internal constructor(
@@ -152,6 +161,7 @@ class Crane internal constructor(
       this.savedInstanceState = savedInstanceState
     }
 
+    @MainThread
     fun build(): Crane {
       if (!::holder.isInitialized) {
         throw IllegalArgumentException(

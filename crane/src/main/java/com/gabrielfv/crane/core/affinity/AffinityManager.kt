@@ -1,13 +1,13 @@
 package com.gabrielfv.crane.core.affinity
 
 import android.os.Bundle
-import com.gabrielfv.crane.util.Saveable
+import com.gabrielfv.crane.util.Savable
 
 private typealias Tag = String
 private typealias Offset = Int
 
 
-internal class AffinityManager : Saveable {
+internal class AffinityManager : Savable {
   private val affinityOffset = mutableMapOf<Tag, Offset>()
 
   fun push(tag: String? = null) {

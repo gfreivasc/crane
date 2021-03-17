@@ -2,7 +2,7 @@ package com.gabrielfv.crane.util
 
 import android.os.Bundle
 
-interface Saveable {
+interface Savable {
 
   fun save(outState: Bundle)
 

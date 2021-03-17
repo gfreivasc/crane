@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.gabrielfv.crane.annotations.RoutedBy
+import com.gabrielfv.crane.core.Crane
 import com.gabrielfv.crane.core.Route
 import com.gabrielfv.crane.routersample.databinding.AFragmentBinding
 import kotlinx.parcelize.Parcelize
@@ -18,7 +19,7 @@ class AFragment : Fragment(R.layout.a_fragment) {
     super.onViewCreated(view, savedInstanceState)
     val binding = AFragmentBinding.bind(view)
     binding.textView.setOnClickListener {
-      NavReg.crane.push(BRoute())
+      Crane.getInstance().push(BRoute())
     }
   }
 }

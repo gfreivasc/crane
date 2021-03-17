@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.gabrielfv.basicsample.collapsibleflow.CFFirstRoute
+import com.gabrielfv.crane.core.Crane
 import com.gabrielfv.crane.core.Route
 import com.gabrielfv.crane.ktx.params
 import kotlinx.parcelize.Parcelize
@@ -15,7 +16,7 @@ import kotlinx.parcelize.Parcelize
 data class SecondRoute(val number: Int) : Route
 
 class SecondFragment : Fragment() {
-  private val crane by lazy { NavRegistry.crane }
+  private val crane by lazy { Crane.getInstance() }
   private val params: SecondRoute by params()
 
   override fun onCreateView(

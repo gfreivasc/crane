@@ -2,10 +2,10 @@ package com.gabrielfv.crane.core.result
 
 import android.os.Bundle
 import android.os.Parcelable
-import com.gabrielfv.crane.util.Saveable
+import com.gabrielfv.crane.util.Savable
 import kotlin.reflect.KClass
 
-internal class ResultRegistry : Saveable {
+internal class ResultRegistry : Savable {
   private val results = mutableListOf<Parcelable>()
 
   fun <T : Parcelable> push(result: T) {
