@@ -45,16 +45,16 @@ class RouteRegistrarProcessorTest(
     )
     assertThat(result.exitCode)
       .isEqualTo(KotlinCompilation.ExitCode.OK)
-    // I don't know why the result returns empty for KSP
-    // Watching  tschuchortdev/kotlin-compile-testing#129
-    if (backend == "ksp") {
-      throw AssumptionViolatedException(
-        "Compiler result is not accounting for KSP source generation"
-      )
+    val generated = if (backend == "ksp") {
+      assertThat(result.kspGeneratedSources)
+        .isNotEmpty
+      result.kspGeneratedSources
+    } else {
+      assertThat(result.sourcesGeneratedByAnnotationProcessor)
+        .isNotEmpty
+      result.sourcesGeneratedByAnnotationProcessor
     }
-    assertThat(result.sourcesGeneratedByAnnotationProcessor)
-      .isNotEmpty
-    assertThat(result.sourcesGeneratedByAnnotationProcessor)
+    assertThat(generated)
       .anyMatch { file ->
         file.name.contains("RouteRegistrar")
         with(file.readText()) {
@@ -161,16 +161,16 @@ class RouteRegistrarProcessorTest(
     )
     assertThat(result.exitCode)
       .isEqualTo(KotlinCompilation.ExitCode.OK)
-    // I don't know why the result returns empty for KSP
-    // Watching  tschuchortdev/kotlin-compile-testing#129
-    if (backend == "ksp") {
-      throw AssumptionViolatedException(
-        "Compiler result is not accounting for KSP source generation"
-      )
+    val generated = if (backend == "ksp") {
+      assertThat(result.kspGeneratedSources)
+        .isNotEmpty
+      result.kspGeneratedSources
+    } else {
+      assertThat(result.sourcesGeneratedByAnnotationProcessor)
+        .isNotEmpty
+      result.sourcesGeneratedByAnnotationProcessor
     }
-    assertThat(result.sourcesGeneratedByAnnotationProcessor)
-      .isNotEmpty
-    assertThat(result.sourcesGeneratedByAnnotationProcessor)
+    assertThat(generated)
       .anyMatch { file ->
         file.name.contains("RouteRegistrar")
         with(file.readText()) {
