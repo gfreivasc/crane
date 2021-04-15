@@ -1,6 +1,8 @@
 package com.gabrielfv.crane.router.generating
 
+import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.addOriginatingElement
 import androidx.room.compiler.processing.writeTo
 import com.gabrielfv.crane.router.RouterEnv
 import com.squareup.kotlinpoet.ClassName
@@ -12,6 +14,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.SET
 import com.squareup.kotlinpoet.TypeSpec
 import java.io.File
+import javax.lang.model.element.Element
 
 internal class RouterBuilder {
   private val className get() = RouterEnv.ROUTER_CLASS
@@ -23,20 +26,26 @@ internal class RouterBuilder {
   fun build(
     dir: File,
     registrars: Set<String>,
-    pkg: String
+    pkg: String,
+    originating: Element
   ) {
-    buildSpec(registrars, pkg).writeTo(dir)
+    val typeSpec = TypeSpec.objectBuilder(className)
+      .addOriginatingElement(originating)
+    buildSpec(typeSpec, pkg, registrars).writeTo(dir)
   }
 
   fun build(
     filer: XFiler,
     registrars: Set<String>,
-    pkg: String
+    pkg: String,
+    originating: XElement
   ) {
-    buildSpec(registrars, pkg).writeTo(filer)
+    val typeSpec = TypeSpec.objectBuilder(className)
+      .addOriginatingElement(originating)
+    buildSpec(typeSpec, pkg, registrars).writeTo(filer)
   }
 
-  private fun buildSpec(registrars: Set<String>, pkg: String): FileSpec {
+  private fun buildSpec(typeSpec: TypeSpec.Builder, pkg: String, registrars: Set<String>): FileSpec {
     val fileBuilder = FileSpec.builder(pkg, className)
     val registrarsProp = buildRegistrarsProp(
       registrars.map { name ->
@@ -44,8 +53,7 @@ internal class RouterBuilder {
       }.toSet()
     )
     val getMethod = buildGetterMethod()
-    val router = TypeSpec.objectBuilder(className)
-      .addModifiers(KModifier.INTERNAL)
+    val router = typeSpec.addModifiers(KModifier.INTERNAL)
       .addProperty(registrarsProp)
       .addFunction(getMethod)
       .build()

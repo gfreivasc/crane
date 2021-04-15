@@ -53,7 +53,7 @@ internal class RouterWiringStep(
     val registrarNames = registrars
       .map { it.className.simpleName() }
       .toSet()
-    routerBuilder.build(env.filer, registrarNames, pkg)
+    routerBuilder.build(env.filer, registrarNames, pkg, root)
   }
 
   private val XElement.isRouteRegistrar: Boolean get() =
