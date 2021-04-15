@@ -15,12 +15,15 @@ import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.Processor
 import javax.lang.model.element.Element
 import javax.tools.Diagnostic
+import kotlin.reflect.KClass
 
 const val KAPT_KOTLIN_GENERATED = "kapt.kotlin.generated"
 
 fun <T> Collection<T>.contains(predicate: (T) -> Boolean): Boolean {
   return find(predicate) != null
 }
+
+val KClass<*>.qName: String get() = java.name
 
 fun Messager.e(message: String, element: Element? = null) {
   if (element != null) {
@@ -49,28 +52,6 @@ val ProcessingEnvironment.kaptGeneratedSourcesDir: String get() =
     messager.e("Kotlin sources dir not found")
     ""
   }
-
-// Room Processing currently does not support KSP element deferring
-fun XProcessingStep.executeInKsp(
-  env: XProcessingEnv,
-  resolver: Resolver
-): List<KSAnnotated> {
-  check(env.backend == XProcessingEnv.Backend.KSP)
-  val elementMap = mutableMapOf<XTypeElement, KSAnnotated>()
-  val args = annotations().associateWith { annotation ->
-    val elements = resolver.getSymbolsWithAnnotation(
-      annotation.java.canonicalName
-    ).filterIsInstance<KSClassDeclaration>()
-      .map {
-        val element = env.requireTypeElement(it.qualifiedName!!.asString())
-        elementMap[element] = it
-        element
-      }
-    elements
-  }
-  return process(env, args)
-    .mapNotNull { elementMap[it] }
-}
 
 /**
  * Trying to hack our way through to get some test utilities to be

@@ -2,6 +2,7 @@ package com.gabrielfv.crane.router.generating
 
 import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.addOriginatingElement
 import androidx.room.compiler.processing.writeTo
 import com.gabrielfv.crane.annotations.internal.RouteRegistrar
 import com.gabrielfv.crane.router.RouterEnv
@@ -21,6 +22,11 @@ class KtRouteRegistrarBuilder : RouteRegistrarBuilder {
     if (routes.isEmpty()) return
     val fileBuilder = FileSpec.builder(RouterEnv.REGISTRARS_PACKAGE, className)
     val registrar = TypeSpec.classBuilder(className)
+      .apply {
+        originating.forEach {
+          addOriginatingElement(it)
+        }
+      }
       .addAnnotation(RouteRegistrar::class)
       .addSuperinterface(RouterEnv.registrarInterfaceName)
       .addFunction(

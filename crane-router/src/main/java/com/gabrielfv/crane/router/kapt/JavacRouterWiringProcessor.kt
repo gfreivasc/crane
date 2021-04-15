@@ -62,13 +62,14 @@ class JavacRouterWiringProcessor : BasicAnnotationProcessor() {
       val registrars = fetchRegistrars()
         .map { it.simpleName.toString() }
         .toSet()
-      val rootPackage = fetchRootPackage(elementsByAnnotation)
-      return if (rootPackage != null) {
+      val fetched = fetchRootPackage(elementsByAnnotation)
+      return if (fetched != null) {
+        val (rootElement, rootPackage) = fetched
         if (registrars.isNotEmpty()) {
-          buildRouterFile(registrars, rootPackage.second)
+          buildRouterFile(registrars, rootPackage, rootElement)
           mutableSetOf()
         } else {
-          mutableSetOf(rootPackage.first)
+          mutableSetOf(rootElement)
         }
       } else {
         mutableSetOf()
@@ -98,11 +99,11 @@ class JavacRouterWiringProcessor : BasicAnnotationProcessor() {
         }
     }
 
-    private fun buildRouterFile(names: Set<String>, rootPackage: String) {
+    private fun buildRouterFile(names: Set<String>, rootPackage: String, originating: Element) {
       if (names.isEmpty()) return
       if (rootPackage.isBlank()) return
       val file = FileBuilder.srcDir(processingEnv.kaptGeneratedSourcesDir)
-      builder.build(file, names, rootPackage)
+      builder.build(file, names, rootPackage, originating)
     }
   }
 }

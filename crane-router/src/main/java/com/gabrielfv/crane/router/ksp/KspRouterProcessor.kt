@@ -5,7 +5,6 @@ import com.gabrielfv.crane.router.ConfinedRegistrarFetcher
 import com.gabrielfv.crane.router.RegistrarFetcher
 import com.gabrielfv.crane.router.RouterWiringStep
 import com.gabrielfv.crane.router.RoutingStep
-import com.gabrielfv.crane.router.executeInKsp
 import com.gabrielfv.crane.router.generating.KtRouteRegistrarBuilder
 import com.gabrielfv.crane.router.generating.RouteRegistrarBuilder
 import com.gabrielfv.crane.router.generating.RouterBuilder
@@ -51,6 +50,6 @@ class KspRouterProcessor : SymbolProcessor {
     RoutingStep(routeRegistrarBuilder)
       .executeInKsp(processingEnv)
     return RouterWiringStep(registrarFetcher, routerBuilder)
-      .executeInKsp(processingEnv, resolver)
+      .executeInKsp(processingEnv)
   }
 }
