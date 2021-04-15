@@ -19,7 +19,7 @@ class JavacRouterProcessor : BasicAnnotationProcessor() {
   private val routeRegistrarBuilder: RouteRegistrarBuilder =
     JavaRouteRegistrarBuilder()
 
-  override fun initSteps(): MutableIterable<ProcessingStep> {
+  override fun steps(): MutableIterable<Step> {
     return mutableSetOf(
       RoutingStep(routeRegistrarBuilder)
         .asAutoCommonProcessor(processingEnv),

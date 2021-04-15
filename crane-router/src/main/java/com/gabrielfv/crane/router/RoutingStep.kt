@@ -1,5 +1,6 @@
 package com.gabrielfv.crane.router
 
+import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XProcessingStep
@@ -8,7 +9,6 @@ import androidx.room.compiler.processing.isTypeElement
 import com.gabrielfv.crane.annotations.RoutedBy
 import com.gabrielfv.crane.router.generating.RouteRegistrarBuilder
 import kotlin.math.absoluteValue
-import kotlin.reflect.KClass
 
 internal class RoutingStep(
   private val registrarBuilder: RouteRegistrarBuilder,
@@ -18,15 +18,15 @@ internal class RoutingStep(
     const val ANNOTATION_VALUE_METHOD = "value"
   }
 
-  override fun annotations(): Set<KClass<out Annotation>> {
-    return mutableSetOf(RoutedBy::class)
+  override fun annotations(): Set<String> {
+    return mutableSetOf(RoutedBy::class.qName)
   }
 
   override fun process(
     env: XProcessingEnv,
-    elementsByAnnotation: Map<KClass<out Annotation>, List<XTypeElement>>
+    elementsByAnnotation: Map<String, Set<XElement>>
   ): Set<XTypeElement> {
-    val elements = elementsByAnnotation[RoutedBy::class]
+    val elements = elementsByAnnotation[RoutedBy::class.qName]
       ?.filter { element ->
         val valid = isFragmentDeclaration(element)
         env.messager.check(valid, element) {
@@ -34,7 +34,7 @@ internal class RoutingStep(
             "${RouterEnv.fragmentName.canonicalName} instances"
         }
         valid
-      } ?: emptyList()
+      }?.map { it as XTypeElement } ?: emptyList()
     val (originating, routes) = mapRoutes(env, elements)
     buildRegistrar(registrarBuilder, env.filer, routes, originating.toSet())
     return emptySet()
@@ -58,7 +58,7 @@ internal class RoutingStep(
   }
 
   private fun routeFor(element: XTypeElement): ElementRoute {
-    val route = element.toAnnotationBox(RoutedBy::class)
+    val route = element.getAnnotation(RoutedBy::class)
       ?.getAsType(ANNOTATION_VALUE_METHOD)
       ?.typeName
       ?.toString() ?: "<ERROR>"
@@ -66,7 +66,8 @@ internal class RoutingStep(
     return ElementRoute(element, route to target)
   }
 
-  private fun isFragmentDeclaration(element: XTypeElement): Boolean {
+  private fun isFragmentDeclaration(element: XElement): Boolean {
+    if (element !is XTypeElement) return false
     var sup = element.superType
     while (sup != null) {
       if (sup.typeElement?.qualifiedName == RouterEnv.fragmentName.toString()) {
