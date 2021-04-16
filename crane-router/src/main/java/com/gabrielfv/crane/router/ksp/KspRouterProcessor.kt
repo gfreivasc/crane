@@ -49,7 +49,8 @@ class KspRouterProcessor : SymbolProcessor {
 
     RoutingStep(routeRegistrarBuilder)
       .executeInKsp(processingEnv)
-    return RouterWiringStep(registrarFetcher, routerBuilder)
-      .executeInKsp(processingEnv)
+    // Removes XProcessing wiring step while there's no support for
+    // package resolution
+    return emptyList()
   }
 }

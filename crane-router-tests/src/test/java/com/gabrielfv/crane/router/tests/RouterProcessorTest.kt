@@ -1,5 +1,7 @@
 package com.gabrielfv.crane.router.tests
 
+import com.gabrielfv.crane.router.kapt.JavacRouterProcessor
+import com.gabrielfv.crane.router.ksp.KspRouterProcessor
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import org.assertj.core.api.Assertions.assertThat
@@ -12,34 +14,48 @@ import org.junit.runners.Parameterized
 
 @RunWith(Parameterized::class)
 class RouteRegistrarProcessorTest(
-  processors: ProcessorProvider<Any>
-) : CompilationTest(processors) {
+  processors: ProcessorProvider<*>
+) {
   private val backend = processors.toString()
+  private val testCompiler = TestCompiler(processors.provide())
   @field:Rule
   @JvmField
   val temporaryFolder = TemporaryFolder()
 
+  companion object {
+    @JvmStatic
+    @Parameterized.Parameters(name = "{0}")
+    fun data() = listOf(
+      arrayOf(
+        KspProcessorProvider(listOf { KspRouterProcessor() })
+      ),
+      arrayOf(
+        JavacProcessorProvider(listOf { JavacRouterProcessor() })
+      )
+    )
+  }
+
   @Test
   fun routing() {
-    val result = compile(
+    val result = testCompiler.compile(
       temporaryFolder.root,
       SourceFile.kotlin(
         "source.kt",
         """
-            package test
+          package test
 
-            import android.os.Parcel
-            import androidx.fragment.app.Fragment
-            import com.gabrielfv.crane.core.Route
-            import com.gabrielfv.crane.annotations.RoutedBy
+          import android.os.Parcel
+          import androidx.fragment.app.Fragment
+          import com.gabrielfv.crane.core.Route
+          import com.gabrielfv.crane.annotations.RoutedBy
 
-            class Dummy : Route {
-                override fun describeContents(): Int = 0
-                override fun writeToParcel(dest: Parcel?, flags: Int) { }
-            }
+          class Dummy : Route {
+              override fun describeContents(): Int = 0
+              override fun writeToParcel(dest: Parcel?, flags: Int) { }
+          }
 
-            @RoutedBy(Dummy::class)
-            class A : Fragment()
+          @RoutedBy(Dummy::class)
+          class A : Fragment()
         """
       )
     )
@@ -70,28 +86,28 @@ class RouteRegistrarProcessorTest(
 
   @Test
   fun multipleTargets() {
-    val result = compile(
+    val result = testCompiler.compile(
       temporaryFolder.root,
       SourceFile.kotlin(
         "source.kt",
         """
-            package test
+          package test
 
-            import android.os.Parcel
-            import androidx.fragment.app.Fragment
-            import com.gabrielfv.crane.core.Route
-            import com.gabrielfv.crane.annotations.RoutedBy
+          import android.os.Parcel
+          import androidx.fragment.app.Fragment
+          import com.gabrielfv.crane.core.Route
+          import com.gabrielfv.crane.annotations.RoutedBy
 
-            class Dummy : Route {
-                override fun describeContents(): Int = 0
-                override fun writeToParcel(dest: Parcel?, flags: Int) { }
-            }
-            
-            @RoutedBy(Dummy::class)
-            class A : Fragment()
+          class Dummy : Route {
+              override fun describeContents(): Int = 0
+              override fun writeToParcel(dest: Parcel?, flags: Int) { }
+          }
+          
+          @RoutedBy(Dummy::class)
+          class A : Fragment()
 
-            @RoutedBy(Dummy::class)
-            class B : Fragment()
+          @RoutedBy(Dummy::class)
+          class B : Fragment()
         """
       )
     )
@@ -104,24 +120,24 @@ class RouteRegistrarProcessorTest(
 
   @Test
   fun routingNonFragment() {
-    val result = compile(
+    val result = testCompiler.compile(
       temporaryFolder.root,
       SourceFile.kotlin(
         "source.kt",
         """
-            package test
+          package test
 
-            import android.os.Parcel
-            import com.gabrielfv.crane.core.Route
-            import com.gabrielfv.crane.annotations.RoutedBy
+          import android.os.Parcel
+          import com.gabrielfv.crane.core.Route
+          import com.gabrielfv.crane.annotations.RoutedBy
 
-            class R : Route {
-                override fun describeContents(): Int = 0
-                override fun writeToParcel(dest: Parcel?, flags: Int) { }
-            }
-            
-            @RoutedBy(R::class)
-            class T
+          class R : Route {
+              override fun describeContents(): Int = 0
+              override fun writeToParcel(dest: Parcel?, flags: Int) { }
+          }
+          
+          @RoutedBy(R::class)
+          class T
         """
       )
     )
@@ -135,27 +151,27 @@ class RouteRegistrarProcessorTest(
 
   @Test
   fun nestedClassRoute() {
-    val result = compile(
+    val result = testCompiler.compile(
       temporaryFolder.root,
       SourceFile.kotlin(
         "source.kt",
         """
-            package test
+          package test
 
-            import android.os.Parcel
-            import androidx.fragment.app.Fragment
-            import com.gabrielfv.crane.core.Route
-            import com.gabrielfv.crane.annotations.RoutedBy
+          import android.os.Parcel
+          import androidx.fragment.app.Fragment
+          import com.gabrielfv.crane.core.Route
+          import com.gabrielfv.crane.annotations.RoutedBy
 
-            object Routes {
-              class R : Route {
-                  override fun describeContents(): Int = 0
-                  override fun writeToParcel(dest: Parcel?, flags: Int) { }
-              }
+          object Routes {
+            class R : Route {
+                override fun describeContents(): Int = 0
+                override fun writeToParcel(dest: Parcel?, flags: Int) { }
             }
-            
-            @RoutedBy(Routes.R::class)
-            class A : Fragment()
+          }
+          
+          @RoutedBy(Routes.R::class)
+          class A : Fragment()
         """
       )
     )

@@ -62,9 +62,9 @@ class JavacRouterWiringProcessor : BasicAnnotationProcessor() {
       val registrars = fetchRegistrars()
         .map { it.simpleName.toString() }
         .toSet()
-      val fetched = fetchRootPackage(elementsByAnnotation)
-      return if (fetched != null) {
-        val (rootElement, rootPackage) = fetched
+      val root = fetchRoot(elementsByAnnotation)
+      return if (root != null) {
+        val (rootElement, rootPackage) = root
         if (registrars.isNotEmpty()) {
           buildRouterFile(registrars, rootPackage, rootElement)
           mutableSetOf()
@@ -83,12 +83,12 @@ class JavacRouterWiringProcessor : BasicAnnotationProcessor() {
         ?.filter { it.getAnnotation(RouteRegistrar::class.java) != null }
         ?.toSet() ?: emptySet()
 
-    private fun fetchRootPackage(
+    private fun fetchRoot(
       elementsByAnnotation: ImmutableSetMultimap<String, Element>
     ): Pair<Element, String>? {
       val roots = elementsByAnnotation[CraneRoot::class.java.name]
       if (roots.size > 1) {
-        processingEnv.messager.e("Multiple ${CraneRoot::class.java.simpleName} found")
+        processingEnv.messager.e("Multiple @${CraneRoot::class.simpleName} instances found")
       }
       return roots.firstOrNull()
         ?.let { root ->

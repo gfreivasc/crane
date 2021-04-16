@@ -14,6 +14,8 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.SET
 import com.squareup.kotlinpoet.TypeSpec
 import java.io.File
+import java.io.OutputStream
+import java.nio.charset.StandardCharsets
 import javax.lang.model.element.Element
 
 internal class RouterBuilder {
@@ -43,6 +45,17 @@ internal class RouterBuilder {
     val typeSpec = TypeSpec.objectBuilder(className)
       .addOriginatingElement(originating)
     buildSpec(typeSpec, pkg, registrars).writeTo(filer)
+  }
+
+  fun build(
+    stream: OutputStream,
+    registrars: Set<String>,
+    pkg: String
+  ) {
+    val typeSpec = TypeSpec.objectBuilder(className)
+    val fileSpec = buildSpec(typeSpec, pkg, registrars)
+    stream.writer(StandardCharsets.UTF_8)
+      .use { fileSpec.writeTo(it) }
   }
 
   private fun buildSpec(typeSpec: TypeSpec.Builder, pkg: String, registrars: Set<String>): FileSpec {
