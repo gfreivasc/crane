@@ -20,8 +20,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 dependencies {
   implementation(project(":crane-annotations"))
   implementation(kotlin("stdlib"))
-  implementation(Deps.KSP.api)
   implementation(kotlin("compiler-embeddable"))
+  implementation(Deps.KSP.api)
   implementation(Deps.AndroidProcessing.room)
   implementation(Deps.GoogleAuto.serviceAnnotations)
   implementation(Deps.GoogleAuto.common)
@@ -32,13 +32,6 @@ dependencies {
   compileOnly(Deps.GoogleAuto.service)
   kapt(Deps.Gradle.inCap)
   kapt(Deps.GoogleAuto.service)
-
-  testImplementation(Deps.KSP.impl)
-  testImplementation(Deps.Testing.KotlinCompile.base)
-  testImplementation(Deps.Testing.KotlinCompile.ksp)
-  testImplementation(Deps.Testing.mockK)
-  testImplementation(Deps.Testing.jUnit)
-  testImplementation(Deps.Testing.assertJ)
 }
 
 afterEvaluate {
