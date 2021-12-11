@@ -7,7 +7,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Crane">
-        <activity android:name=".CraneRootActivity">
+        <activity android:name=".CraneRootActivity" android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />

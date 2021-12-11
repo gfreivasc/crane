@@ -8,7 +8,13 @@ group = project.findProperty("library.groupId") as String
 version = project.findProperty("library.version") as String
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-  kotlinOptions.freeCompilerArgs += "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi"
+  kotlinOptions {
+    jvmTarget = "11"
+    freeCompilerArgs = freeCompilerArgs + listOf(
+      "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi",
+      "-Xjvm-default=enable",
+    )
+  }
 }
 
 dependencies {

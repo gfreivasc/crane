@@ -7,9 +7,16 @@ plugins {
 
 android {
   defaultConfig {
-    compileSdk = 30
-    targetSdk = 30
+    compileSdk = 31
+    targetSdk = 31
     minSdk = 1
+  }
+  compileOptions {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+  }
+  kotlinOptions {
+    jvmTarget = "11"
   }
 }
 
@@ -21,6 +28,7 @@ dependencies {
   implementation(Deps.Android.appcompat)
   implementation(Deps.KSP.api)
   implementation(Deps.GoogleAuto.common)
+  implementation(Deps.AndroidProcessing.room)
   implementation(Deps.Testing.KotlinCompile.base)
   implementation(Deps.Testing.KotlinCompile.ksp)
   implementation(Deps.Testing.jUnit)

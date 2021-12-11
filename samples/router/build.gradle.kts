@@ -1,24 +1,24 @@
 plugins {
   id("com.android.application")
   kotlin("android")
-//  kotlin("kapt")
+  kotlin("kapt")
   id("kotlin-parcelize")
-  id("com.google.devtools.ksp")
+//  id("com.google.devtools.ksp")
 }
 
 android {
-  compileSdkVersion(30)
-  buildToolsVersion("30.0.3")
+  compileSdk = 31
+  buildToolsVersion = "31.0.0"
 
   defaultConfig {
-    minSdkVersion(16)
-    targetSdkVersion(30)
+    minSdk = 16
+    targetSdk = 31
 
-    applicationId("com.gabrielfv.crane.routersample")
-    versionCode(1)
-    versionName("1.0")
+    applicationId = "com.gabrielfv.crane.routersample"
+    versionCode = 1
+    versionName = "1.0"
 
-    testInstrumentationRunner("androidx.test.runner.AndroidJUnitRunner")
+    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
     vectorDrawables.useSupportLibrary = true
   }
@@ -38,18 +38,18 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
   }
   kotlinOptions {
-    jvmTarget = "1.8"
+    jvmTarget = "11"
   }
 }
 
 dependencies {
   implementation(project(":crane"))
   implementation(project(":crane-annotations"))
-  ksp(project(":crane-router"))
+  kapt(project(":crane-router"))
 
   implementation(kotlin("stdlib"))
   implementation("androidx.core:core-ktx:1.3.2")

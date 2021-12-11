@@ -1,29 +1,29 @@
 object Versions {
   object Kotlin {
-    const val lang = "1.4.32"
-    const val ksp = "1.4.32-1.0.0-alpha07"
+    const val lang = "1.6.0"
+    const val ksp = "1.6.0-1.0.1"
   }
 
   object Square {
-    const val kotlinPoet = "1.7.2"
+    const val kotlinPoet = "1.10.2"
     const val javaPoet = "1.13.0"
   }
 
   object Android {
-    const val gradle = "4.1.2"
+    const val gradle = "7.0.2"
     const val appcompat = "1.2.0"
     const val coreKtx = "1.3.2"
   }
 
   object AndroidProcessing {
-    const val room = "2.4.0-SNAPSHOT"
+    const val room = "2.4.0-rc01"
   }
 
   object Testing {
     const val jUnit = "4.13.2"
     const val mockK = "1.10.6"
     const val assertJ = "3.19.0"
-    const val kotlinCompile = "1.3.6"
+    const val kotlinCompile = "1.4.6"
   }
 
   object GoogleAuto {

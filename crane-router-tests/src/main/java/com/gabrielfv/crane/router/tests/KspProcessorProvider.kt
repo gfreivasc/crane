@@ -1,12 +1,12 @@
 package com.gabrielfv.crane.router.tests
 
-import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.processing.SymbolProcessorProvider
 
 class KspProcessorProvider(
-  private val factories: List<() -> SymbolProcessor>
-) : ProcessorProvider<SymbolProcessor> {
+  private val factories: List<() -> SymbolProcessorProvider>
+) : ProcessorProvider<SymbolProcessorProvider> {
 
-  override fun provide(): List<SymbolProcessor> {
+  override fun provide(): List<SymbolProcessorProvider> {
     return factories.map { it() }
   }
 
