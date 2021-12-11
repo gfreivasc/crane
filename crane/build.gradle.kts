@@ -27,12 +27,11 @@ android {
 dependencies {
   api(project(":crane-annotations"))
   implementation(kotlin("stdlib"))
-  implementation(Deps.Android.appcompat)
-  implementation(Deps.Android.coreKtx)
+  implementation(libs.bundles.androidx)
 
-  testImplementation(Deps.Testing.jUnit)
-  testImplementation(Deps.Testing.assertJ)
-  testImplementation(Deps.Testing.mockK)
+  testImplementation(libs.junit)
+  testImplementation(libs.assertj)
+  testImplementation(libs.mockk)
 }
 
 afterEvaluate {
