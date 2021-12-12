@@ -1,8 +1,10 @@
+@file:Suppress("UnstableApiUsage")
+enableFeaturePreview("VERSION_CATALOGS")
 dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
   repositories {
     google()
     mavenCentral()
-    maven { setUrl("https://androidx.dev/snapshots/builds/7285896/artifacts/repository") }
   }
 }
 include(
@@ -11,5 +13,5 @@ include(
   ":crane-router",
   ":crane-router-tests",
   ":samples:basic",
-  ":samples:router"
+  ":samples:router",
 )

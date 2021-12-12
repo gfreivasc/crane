@@ -2,14 +2,8 @@ package com.gabrielfv.crane.router
 
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XMessager
-import androidx.room.compiler.processing.XProcessingEnv
-import androidx.room.compiler.processing.XProcessingStep
-import androidx.room.compiler.processing.XTypeElement
 import com.google.auto.common.BasicAnnotationProcessor
 import com.google.common.annotations.VisibleForTesting
-import com.google.devtools.ksp.processing.Resolver
-import com.google.devtools.ksp.symbol.KSAnnotated
-import com.google.devtools.ksp.symbol.KSClassDeclaration
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.Processor
@@ -34,14 +28,14 @@ fun Messager.e(message: String, element: Element? = null) {
 }
 
 fun XMessager.e(message: String, element: XElement? = null) {
-  printMessage(Diagnostic.Kind.ERROR, message, element)
+  if (element != null) {
+    printMessage(Diagnostic.Kind.ERROR, message, element)
+  } else {
+    printMessage(Diagnostic.Kind.ERROR, message)
+  }
 }
 
-fun XMessager.check(condition: Boolean, message: () -> String) {
-  check(condition, null, message)
-}
-
-fun XMessager.check(condition: Boolean, element: XElement?, message: () -> String) {
+fun XMessager.check(condition: Boolean, element: XElement, message: () -> String) {
   if (!condition) {
     e(message(), element)
   }

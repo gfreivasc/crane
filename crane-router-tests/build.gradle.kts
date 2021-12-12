@@ -1,30 +1,24 @@
 plugins {
-  // Enable android and parcelize classpath for testing purposes
-  id("com.android.library")
-  kotlin("android")
-  kotlin("kapt")
+  kotlin("jvm")
 }
 
-android {
-  defaultConfig {
-    compileSdk = 30
-    targetSdk = 30
-    minSdk = 1
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+  kotlinOptions {
+    jvmTarget = "11"
   }
 }
 
 dependencies {
   implementation(project(":crane-router"))
-  implementation(project(":crane"))
   implementation(project(":crane-annotations"))
   implementation(kotlin("stdlib"))
-  implementation(Deps.Android.appcompat)
-  implementation(Deps.KSP.api)
-  implementation(Deps.GoogleAuto.common)
-  implementation(Deps.Testing.KotlinCompile.base)
-  implementation(Deps.Testing.KotlinCompile.ksp)
-  implementation(Deps.Testing.jUnit)
-  implementation(Deps.Testing.assertJ)
+  implementation(libs.ksp.api)
+  implementation(libs.google.auto.common)
+  implementation(libs.androidx.room.processing)
+  implementation(libs.kotlin.compile.core)
+  implementation(libs.kotlin.compile.ksp)
+  implementation(libs.junit)
+  implementation(libs.assertj)
 
-  testImplementation(Deps.KSP.impl)
+  testImplementation(libs.ksp.impl)
 }

@@ -4,12 +4,16 @@ buildscript {
     google()
   }
   dependencies {
-    classpath(kotlin("gradle-plugin", version = Versions.Kotlin.lang))
-    classpath(Deps.Android.gradle)
-    classpath(Deps.KSP.classpath)
+    classpath(libs.kotlin.gradle)
+    classpath(libs.android.gradle)
+    classpath(libs.ksp.gradle)
   }
 }
 
 tasks.register<Delete>("clean") {
   delete(rootProject.buildDir)
+}
+
+tasks.withType<Wrapper> {
+  distributionType = Wrapper.DistributionType.ALL
 }

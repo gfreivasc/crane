@@ -5,34 +5,33 @@ plugins {
 }
 
 android {
-  compileSdkVersion(30)
-  buildToolsVersion("30.0.3")
+  compileSdk = 31
+  buildToolsVersion = "31.0.0"
 
   defaultConfig {
-    minSdkVersion(1)
-    targetSdkVersion(30)
+    minSdk = 1
+    targetSdk = 31
   }
   testOptions {
     unitTests.isReturnDefaultValues = true
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
   }
   kotlinOptions {
-    jvmTarget = "1.8"
+    jvmTarget = "11"
   }
 }
 
 dependencies {
   api(project(":crane-annotations"))
   implementation(kotlin("stdlib"))
-  implementation(Deps.Android.appcompat)
-  implementation(Deps.Android.coreKtx)
+  implementation(libs.bundles.androidx)
 
-  testImplementation(Deps.Testing.jUnit)
-  testImplementation(Deps.Testing.assertJ)
-  testImplementation(Deps.Testing.mockK)
+  testImplementation(libs.junit)
+  testImplementation(libs.assertj)
+  testImplementation(libs.mockk)
 }
 
 afterEvaluate {

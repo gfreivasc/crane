@@ -15,8 +15,7 @@ class RouteRegistrarProcessorTest(
   processors: ProcessorProvider<Any>
 ) : CompilationTest(processors) {
   private val backend = processors.toString()
-  @field:Rule
-  @JvmField
+  @get:Rule
   val temporaryFolder = TemporaryFolder()
 
   @Test
