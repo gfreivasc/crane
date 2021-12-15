@@ -6,13 +6,12 @@ import com.gabrielfv.basicsample.databinding.ActivityMainBinding
 import com.gabrielfv.crane.core.Crane
 
 class CraneRootActivity : AppCompatActivity() {
-  private lateinit var crane: Crane
+  private val crane: Crane = Crane.create(routeMap)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
-    crane = Crane.create(routeMap)
     crane.init(this, binding.root.id, FirstRoute("Gabriel"))
     savedInstanceState?.let { crane.restoreSavedState(it) }
   }

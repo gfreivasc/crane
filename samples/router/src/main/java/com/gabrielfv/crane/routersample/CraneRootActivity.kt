@@ -8,13 +8,12 @@ import com.gabrielfv.crane.routersample.databinding.ActivityMainBinding
 
 @CraneRoot
 class CraneRootActivity : AppCompatActivity() {
-  private lateinit var crane: Crane
+  private val crane: Crane = Crane.create(Router.get())
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
-    crane = Crane.create(Router.get())
     crane.init(this, android.R.id.content, ARoute())
   }
 

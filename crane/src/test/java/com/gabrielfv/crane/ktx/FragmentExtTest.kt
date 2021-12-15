@@ -42,7 +42,7 @@ class FragmentExtTest {
     val message = result.let { it as IllegalStateException }.message
     assertThat(message).isEqualTo(
       "Tried to access a route that did not exist. " +
-        "Has the fragment been spawned through <com.gabrielfv.crane.Crane>?"
+        "Has the fragment been spawned through <${Crane::class.qualifiedName}>?"
     )
   }
 }

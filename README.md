@@ -79,15 +79,15 @@ Now to set up your navigation you will need to create an activity that will hold
 
 ```kotlin
 class NavRootActivity : AppCompatActivity {
-    private lateinit var crane: Crane
+    private val crane: Crane = Crane.create(routeMap)  // Or on your Dependency Graph
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        crane = Crane.init(this, android.R.id.content) {
-            map(routeMap)
-            root(HomeRoute("Our App Title")) // Must have
-            // Tell Crane to check for state to restore
-            savedState(savedInstanceState)
+        crane.init(this, android.R.id.content, ARoute())
+
+        // Allow crane to restore any state it might have saved
+        if (savedInstanceState != null) {
+            crane.restoreSavedState(savedInstanceState)
         }
     }
 
@@ -121,14 +121,11 @@ We should also annotate where we intend to build our navigation with `@CraneRoot
 ```kotlin
 @CraneRoot
 class NavRootActivity : AppCompatActivity {
-    private lateinit var crane: Crane
+    private val crane: Crane = Crane.create(Router.get())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        crane = Crane.init(this, android.R.id.content) {
-            create(this, android.R.id.content)
-            map(Router.get())
-        }
+        crane.init(this, android.R.id.content, ARoute())
     }
 }
 ```
