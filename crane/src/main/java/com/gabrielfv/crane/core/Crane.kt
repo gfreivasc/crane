@@ -27,9 +27,11 @@ class Crane internal constructor(
   fun init(
     activity: FragmentActivity,
     @IdRes containerId: Int,
-    root: Route
+    root: Route,
+    savedInstanceState: Bundle? = null
   ) {
     init(Navigator.Stack(activity, containerId, routeMap, affinityManager, root))
+    savedInstanceState?.let { restoreSavedState(it) }
   }
 
   private fun init(navigator: Navigator) {

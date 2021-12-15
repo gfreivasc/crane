@@ -17,7 +17,9 @@ interface CraneRegistry {
     private lateinit var instance: Crane
 
     override fun create(routeMap: RouteMap, factory: Crane.Factory): Crane {
-      return factory.create(routeMap)
+      return factory.create(routeMap).also { crane ->
+        instance = crane
+      }
     }
 
     override fun getInstance(): Crane {

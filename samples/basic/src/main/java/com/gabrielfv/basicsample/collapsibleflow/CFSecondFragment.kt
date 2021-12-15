@@ -12,12 +12,13 @@ import com.gabrielfv.crane.core.Crane
 import com.gabrielfv.crane.core.Route
 import com.gabrielfv.crane.ktx.params
 import kotlinx.parcelize.Parcelize
+import kotlin.random.Random
 
 @Parcelize
-data class CFSecondRoute(val age: Int) : Route
+data class CFSecondRoute(val id: Int) : Route
 
 class CFSecondFragment : Fragment() {
-  private val crane by lazy { Crane.getInstance() }
+  private val crane = Crane.getInstance()
   private val params: CFSecondRoute by params()
 
   override fun onCreateView(
@@ -32,9 +33,9 @@ class CFSecondFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     val finishText = view.findViewById<TextView>(R.id.finishText)
     val finishButton = view.findViewById<Button>(R.id.finishButton)
-    finishText.text = "Ok, this is meant for ${params.age} year olds."
+    finishText.text = "This is page 2 for user #${params.id}!"
     finishButton.setOnClickListener {
-      crane.pushResult(CollapsibleResult(params.age))
+      crane.pushResult(CollapsibleResult(params.id + Random(params.id).nextInt()))
       crane.popAffinity()
       crane.push(CFSuccessRoute())
     }
