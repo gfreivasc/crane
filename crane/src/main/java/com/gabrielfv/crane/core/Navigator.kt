@@ -12,8 +12,6 @@ import com.gabrielfv.crane.util.placeKey
 import com.gabrielfv.crane.util.setCustomAnimations
 import com.gabrielfv.crane.util.transaction
 
-private const val ROOT_AFFINITY_TAG = "com.gabrielfv.crane.ROOT_AFFINITY_TAG"
-
 internal interface Navigator {
 
   @MainThread
@@ -44,7 +42,7 @@ internal interface Navigator {
 
     override fun push(route: Route, fragmentAnimation: FragmentAnimation?) {
       val tag = when {
-        stackRecord == 0 -> ROOT_AFFINITY_TAG
+        stackRecord == 0 -> Crane.ROOT_AFFINITY_TAG
         route is AffinityRoute -> route.tag
         else -> null
       }

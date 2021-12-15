@@ -83,11 +83,12 @@ class NavRootActivity : AppCompatActivity {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        crane = Crane.init(this, android.R.id.content) {
-            map(routeMap)
-            root(HomeRoute("Our App Title")) // Must have
-            // Tell Crane to check for state to restore
-            savedState(savedInstanceState)
+        crane = Crane.create(routeMap)  // Or on your Dependency Graph
+        crane.init(this, android.R.id.content, ARoute())
+
+        // Allow crane to restore any state it might have saved
+        if (savedInstanceState != null) {
+            crane.restoreSavedState(savedInstanceState)
         }
     }
 
