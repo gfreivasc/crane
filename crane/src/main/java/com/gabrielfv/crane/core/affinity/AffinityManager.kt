@@ -6,7 +6,6 @@ import com.gabrielfv.crane.util.Savable
 private typealias Tag = String
 private typealias Offset = Int
 
-
 internal class AffinityManager : Savable {
   private val affinityOffset = mutableMapOf<Tag, Offset>()
 

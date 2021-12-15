@@ -4,9 +4,11 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
+import androidx.fragment.app.FragmentManager
 import com.gabrielfv.crane.core.Route
 import com.gabrielfv.crane.core.affinity.AffinityRoute
 import com.gabrielfv.crane.ktx.params
+import io.mockk.mockk
 
 data class A(val i: Int) : Route {
   override fun describeContents(): Int = 0
