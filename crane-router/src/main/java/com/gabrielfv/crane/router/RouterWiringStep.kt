@@ -9,7 +9,6 @@ import com.gabrielfv.crane.annotations.internal.RouteRegistrar
 import com.gabrielfv.crane.router.generating.RouterBuilder
 
 internal class RouterWiringStep(
-  private val registrarFetcher: RegistrarFetcher,
   private val routerBuilder: RouterBuilder
 ) : XProcessingStep {
 
@@ -25,18 +24,23 @@ internal class RouterWiringStep(
     elementsByAnnotation: Map<String, Set<XElement>>
   ): Set<XElement> {
     val rootAnnotated = elementsByAnnotation[CraneRoot::class.qName] ?: emptyList()
-    val localRegistrars = elementsByAnnotation[RouteRegistrar::class.qName]
-      ?.filter { it.isRouteRegistrar }
-      ?.map { it as XTypeElement }
-      ?.toSet() ?: emptySet()
-    val registrars = registrarFetcher.fetch(env, localRegistrars)
     val root = fetchRoot(env, rootAnnotated) ?: return emptySet()
+    val registrars = fetchRegistrars(env)
     if (registrars.isEmpty()) return setOf(root)
     buildRouter(env, root, registrars)
     return emptySet()
   }
 
-  private fun fetchRoot(env: XProcessingEnv, annotated: Collection<XElement>): XTypeElement? {
+  private fun fetchRegistrars(env: XProcessingEnv): Set<XTypeElement> {
+    return env.getTypeElementsFromPackage(RouterEnv.REGISTRARS_PACKAGE)
+      .filter { it.hasAnnotation(RouteRegistrar::class) }
+      .toSet()
+  }
+
+  private fun fetchRoot(
+    env: XProcessingEnv,
+    annotated: Collection<XElement>
+  ): XTypeElement? {
     if (annotated.size > 1) env.messager.e(
       "Multiple ${CraneRoot::class.java.simpleName} instances found"
     )
