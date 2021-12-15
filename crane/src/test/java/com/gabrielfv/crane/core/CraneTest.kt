@@ -41,38 +41,7 @@ class CraneTest {
     every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
     val subject = instantiate()
 
-    subject.setRoot(A(1))
-
-    verify {
-      affinityManager.push(Crane.ROOT_AFFINITY_TAG)
-      fragmentTransaction.addToBackStack(eq(Crane.ROOT_AFFINITY_TAG))
-      fragmentTransaction.replace(eq(0), eq(fragment))
-    }
-  }
-
-  @Test
-  fun onSetRoot_withBackStack() {
-    every { fragManager.backStackEntryCount } returns 1
-    val subject = instantiate()
-
-    subject.setRoot(A(1))
-
-    verify {
-      affinityManager.push(Crane.ROOT_AFFINITY_TAG)
-    }
-    verify(exactly = 0) {
-      fragmentTransaction.addToBackStack(eq(Crane.ROOT_AFFINITY_TAG))
-      fragmentTransaction.replace(eq(0), any())
-    }
-  }
-
-  @Test
-  fun onPush_withoutRoot() {
-    val fragment = AFragment()
-    every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
-    val subject = instantiate()
-
-    subject.push(A(1))
+    subject.init(activity, containerViewId, A(1))
 
     verify {
       affinityManager.push(Crane.ROOT_AFFINITY_TAG)
@@ -85,13 +54,13 @@ class CraneTest {
   fun onPush_withRoot() {
     val fragment = AFragment()
     val animations = FragmentAnimation()
-    every { fragManager.backStackEntryCount } returns 1
     every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
     val subject = instantiate()
+    subject.init(activity, containerViewId, A(0))
 
     subject.push(A(1))
 
-    verify {
+    verify(atLeast = 1) {
       affinityManager.push(isNull())
       fragmentTransaction.addToBackStack(isNull())
       fragmentTransaction.replace(eq(0), eq(fragment))
@@ -108,13 +77,13 @@ class CraneTest {
   fun onPush_affinityWithRoot() {
     val fragment = AFragment()
     val route = Affinity(1)
-    every { fragManager.backStackEntryCount } returns 1
     every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
     val subject = instantiate()
+    subject.init(activity, containerViewId, A(0))
 
     subject.push(route)
 
-    verify {
+    verify(atLeast = 1) {
       affinityManager.push(eq(route.tag))
       fragmentTransaction.addToBackStack(route.tag)
       fragmentTransaction.replace(eq(0), eq(fragment))
@@ -123,25 +92,12 @@ class CraneTest {
 
   @Test
   fun onPop_withBackStack() {
-    every { fragManager.backStackEntryCount } returns 1
     val subject = instantiate()
+    subject.init(activity, containerViewId, A(0))
 
     val result = subject.pop()
 
     verify {
-      affinityManager.popRegular()
-      fragManager.popBackStack()
-    }
-    assertThat(result).isEqualTo(false)
-  }
-
-  @Test
-  fun onPop_withoutBackStack() {
-    val subject = instantiate()
-
-    val result = subject.pop()
-
-    verify(exactly = 0) {
       affinityManager.popRegular()
       fragManager.popBackStack()
     }
@@ -153,7 +109,7 @@ class CraneTest {
     val fragment = AFragment()
     every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
     val subject = instantiate()
-    subject.push(A(1))
+    subject.init(activity, containerViewId, A(0))
 
     val result = subject.pop()
 
@@ -167,9 +123,9 @@ class CraneTest {
   @Test
   fun onPop_afterPushWithBackStack() {
     val fragment = AFragment()
-    every { fragManager.backStackEntryCount } returns 1
     every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
     val subject = instantiate()
+    subject.init(activity, containerViewId, A(0))
     subject.push(A(1))
 
     val result = subject.pop()
@@ -187,7 +143,7 @@ class CraneTest {
     every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
     every { affinityManager.popAffinity() } returns Pair(Crane.ROOT_AFFINITY_TAG, 1)
     val subject = instantiate()
-    subject.setRoot(A(1))
+    subject.init(activity, containerViewId, A(0))
 
     subject.popAffinity()
 
@@ -203,7 +159,7 @@ class CraneTest {
     every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
     every { affinityManager.popAffinity() } returns Pair(affinity.tag, 1)
     val subject = instantiate()
-    subject.push(A(1))
+    subject.init(activity, containerViewId, A(0))
     subject.push(affinity)
 
     subject.popAffinity()
@@ -299,8 +255,6 @@ class CraneTest {
 
   private fun instantiate() = Crane(
     routeMap,
-    activity,
-    containerViewId,
     affinityManager,
     resultRegistry
   )
