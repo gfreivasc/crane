@@ -14,10 +14,10 @@ import com.gabrielfv.crane.ktx.params
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class CFFirstRoute(val age: Int) : AffinityRoute
+data class CFFirstRoute(val id: Int) : AffinityRoute
 
 class CFFirstFragment : Fragment() {
-  private val crane by lazy { Crane.getInstance() }
+  private val crane = Crane.getInstance()
   private val params: CFFirstRoute by params()
 
   override fun onCreateView(
@@ -32,9 +32,9 @@ class CFFirstFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     val confirmText = view.findViewById<TextView>(R.id.confirmText)
     val button = view.findViewById<Button>(R.id.button)
-    confirmText.text = "Are you really ${params.age}?"
+    confirmText.text = "This is page 1 for user id ${params.id}?"
     button.setOnClickListener {
-      crane.push(CFSecondRoute(params.age))
+      crane.push(CFSecondRoute(params.id))
     }
   }
 }

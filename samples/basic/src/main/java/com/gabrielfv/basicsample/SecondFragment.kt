@@ -16,7 +16,7 @@ import kotlinx.parcelize.Parcelize
 data class SecondRoute(val number: Int) : Route
 
 class SecondFragment : Fragment() {
-  private val crane by lazy { Crane.getInstance() }
+  private val crane = Crane.getInstance()
   private val params: SecondRoute by params()
 
   override fun onCreateView(

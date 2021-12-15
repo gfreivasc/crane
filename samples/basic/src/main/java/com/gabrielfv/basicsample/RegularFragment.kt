@@ -20,7 +20,7 @@ data class RegularResult(val count: Int) : Parcelable
 
 class RegularFragment : Fragment() {
   private val params: RegularRoute by params()
-  private val crane by lazy { Crane.getInstance() }
+  private val crane = Crane.getInstance()
 
   override fun onCreateView(
     inflater: LayoutInflater,

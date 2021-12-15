@@ -17,13 +17,13 @@ import kotlinx.parcelize.Parcelize
 data class FirstRoute(val name: String) : Route
 
 class FirstFragment : Fragment() {
-  private val crane by lazy { Crane.getInstance() }
+  private val crane = Crane.getInstance()
   private val params: FirstRoute by params()
   private var count: Int = 0
-  private var confirmedAge: Int? = null
+  private var confirmedId: Int? = null
   private val greeting: String
-    get() = "Hello, ${params.name}" + confirmedAge?.let { age ->
-      ", who is $age years old"
+    get() = "Hello, ${params.name}" + confirmedId?.let { id ->
+      ", user id #$id"
     }.orEmpty()
 
   override fun onCreateView(
@@ -39,7 +39,7 @@ class FirstFragment : Fragment() {
     val goToRegular = view.findViewById<Button>(R.id.goToRegular)
     greeting.text = this.greeting
     greeting.setOnClickListener {
-      crane.push(SecondRoute(26))
+      crane.push(SecondRoute(12334))
     }
     goToRegular.setOnClickListener {
       crane.push(RegularRoute(javaClass.simpleName, count))
@@ -51,7 +51,7 @@ class FirstFragment : Fragment() {
     crane.fetchResult<RegularResult>()?.let { result ->
       count = result.count
     }
-    confirmedAge = crane.fetchResult<CollapsibleResult>()?.confirmedAge
+    confirmedId = crane.fetchResult<CollapsibleResult>()?.confirmedAge
     view?.findViewById<TextView>(R.id.greeting)?.text = greeting
   }
 }

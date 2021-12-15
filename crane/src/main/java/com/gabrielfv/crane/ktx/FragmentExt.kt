@@ -12,7 +12,7 @@ class ParamsDelegate internal constructor() {
     return thisRef.arguments?.getParcelable(Crane.KEY_CRANE_PARAMS)
       ?: throw IllegalStateException(
         "Tried to access a route that did not exist. " +
-          "Has the fragment been spawned through <com.gabrielfv.crane.Crane>?"
+          "Has the fragment been spawned through <${Crane::class.qualifiedName}>?"
       )
   }
 }
