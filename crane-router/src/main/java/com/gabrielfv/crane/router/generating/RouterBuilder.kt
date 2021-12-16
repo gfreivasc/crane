@@ -50,7 +50,7 @@ internal class RouterBuilder {
     val registrarsProp = buildRegistrarsProp(
       registrars.map { name ->
         ClassName(RouterEnv.REGISTRARS_PACKAGE, name)
-      }.toSet()
+      }.toSet().mapToConstructor()
     )
     val getMethod = buildGetterMethod()
     val router = typeSpec.addModifiers(KModifier.INTERNAL)
@@ -62,7 +62,7 @@ internal class RouterBuilder {
       .build()
   }
 
-  private fun buildRegistrarsProp(registrars: Set<ClassName>): PropertySpec =
+  private fun buildRegistrarsProp(registrars: Set<String>): PropertySpec =
     PropertySpec
       .builder(
         REGISTRARS_PROP,
@@ -74,12 +74,14 @@ internal class RouterBuilder {
           .addModifiers(KModifier.INLINE)
           .addCode("""
             |return setOf(
-            |  ${registrars.joinToString(",\n")}()
+            |  ${registrars.joinToString(",\n  ")}
             |)
            """.trimMargin())
           .build()
       )
       .build()
+
+  private fun Set<ClassName>.mapToConstructor() = map { "$it()" }.toSet()
 
   private fun buildGetterMethod(): FunSpec =
     FunSpec.builder(RouterEnv.GETTER_METHOD)
