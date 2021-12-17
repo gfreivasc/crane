@@ -49,7 +49,6 @@ class Crane internal constructor(
   }
 
   companion object : CraneRegistry by CraneRegistry.Default() {
-    internal const val ROOT_AFFINITY_TAG = "com.gabrielfv.crane.ROOT_AFFINITY_TAG"
     internal const val KEY_CRANE_PARAMS = "com.gabrielfv.crane.KEY_CRANE_PARAMS"
   }
 

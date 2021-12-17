@@ -9,6 +9,7 @@ import com.gabrielfv.crane.AFragment
 import com.gabrielfv.crane.Affinity
 import com.gabrielfv.crane.FragmentAnimation
 import com.gabrielfv.crane.Result
+import com.gabrielfv.crane.Unregistered
 import com.gabrielfv.crane.core.affinity.AffinityManager
 import com.gabrielfv.crane.core.result.ResultRegistry
 import com.gabrielfv.crane.testFragmentFactory
@@ -34,21 +35,6 @@ class CraneTest {
   private val containerViewId = 0
   private val affinityManager: AffinityManager = mockk(relaxed = true)
   private val resultRegistry: ResultRegistry = mockk(relaxed = true)
-
-  @Test
-  fun onSetRoot_withoutBackStack() {
-    val fragment = AFragment()
-    every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
-    val subject = instantiate()
-
-    subject.init(activity, containerViewId, A(1))
-
-    verify {
-      affinityManager.push(Crane.ROOT_AFFINITY_TAG)
-      fragmentTransaction.addToBackStack(eq(Crane.ROOT_AFFINITY_TAG))
-      fragmentTransaction.replace(eq(0), eq(fragment))
-    }
-  }
 
   @Test
   fun onPush_withRoot() {
@@ -99,7 +85,6 @@ class CraneTest {
 
     verify {
       affinityManager.popRegular()
-      fragManager.popBackStack()
     }
     assertThat(result).isEqualTo(false)
   }
@@ -115,7 +100,6 @@ class CraneTest {
 
     verify {
       affinityManager.popRegular()
-      fragManager.popBackStack()
     }
     assertThat(result).isEqualTo(false)
   }
@@ -141,7 +125,7 @@ class CraneTest {
   fun onPopAffinity_rootAffinity() {
     val fragment = AFragment()
     every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
-    every { affinityManager.popAffinity() } returns Pair(Crane.ROOT_AFFINITY_TAG, 1)
+    every { affinityManager.popAffinity() } returns null
     val subject = instantiate()
     subject.init(activity, containerViewId, A(0))
 
@@ -173,6 +157,22 @@ class CraneTest {
     verify(exactly = 0) {
       activity.finish()
     }
+  }
+
+  @Test
+  fun onPush_unregistered() {
+    val subject = instantiate()
+    subject.init(activity, containerViewId, A(0))
+
+    val error = try {
+      subject.push(Unregistered(0))
+    } catch (ex: IllegalArgumentException) {
+      ex
+    } as IllegalArgumentException
+
+    assertThat(error).hasMessage(
+      "Cannot push unregistered route <Unregistered(i=0)>. Register it to a Fragment."
+    )
   }
 
   @Test

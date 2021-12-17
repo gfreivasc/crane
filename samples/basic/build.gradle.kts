@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-  compileSdk = 31
+  compileSdk = 30
   buildToolsVersion = "31.0.0"
 
   defaultConfig {
     minSdk = 16
-    targetSdk = 31
+    targetSdk = 30
 
     applicationId = "com.gabrielfv.crane.basicsample"
     versionCode = 1

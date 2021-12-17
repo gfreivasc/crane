@@ -10,6 +10,12 @@ version = project.findProperty("library.version") as String
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {
     jvmTarget = "11"
+  }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+  kotlinOptions {
+    jvmTarget = "11"
     freeCompilerArgs = freeCompilerArgs + listOf(
       "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi",
       "-Xjvm-default=enable",

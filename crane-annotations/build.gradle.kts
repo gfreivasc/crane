@@ -3,6 +3,12 @@ plugins {
   id("maven-publish")
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+  kotlinOptions {
+    jvmTarget = "11"
+  }
+}
+
 dependencies {
   kotlin("stdlib")
 }

@@ -41,9 +41,8 @@ internal interface Navigator {
     }
 
     override fun push(route: Route, fragmentAnimation: FragmentAnimation?) {
-      val tag = when {
-        stackRecord == 0 -> Crane.ROOT_AFFINITY_TAG
-        route is AffinityRoute -> route.tag
+      val tag = when (route) {
+        is AffinityRoute -> route.tag
         else -> null
       }
       push(route, fragmentAnimation, tag)
@@ -61,8 +60,8 @@ internal interface Navigator {
           setCustomAnimations(customAnimations)
         }
         affinityManager.push(tag)
-        addToBackStack(tag)
         replace(containerId, fragment)
+        if (stackRecord > 0) addToBackStack(tag)
         stackRecord++
       }
     }
@@ -70,7 +69,7 @@ internal interface Navigator {
     override fun pop(): Boolean {
       if (stackRecord == 0) return false
       affinityManager.popRegular()
-      fragmentManager.popBackStack()
+      if (stackRecord > 1) fragmentManager.popBackStack()
       return stackRecord-- > 1
     }
 
@@ -78,25 +77,20 @@ internal interface Navigator {
       val affinity = affinityManager.popAffinity()
       if (affinity != null) {
         val (tag, offset) = affinity
-        if (tag == Crane.ROOT_AFFINITY_TAG) activity.finish()
-        else {
-          stackRecord -= offset
-          fragmentManager.popBackStack(
-            tag,
-            FragmentManager.POP_BACK_STACK_INCLUSIVE
-          )
-        }
-      } else {
-        throw IllegalStateException(
-          "Crane was not supposed to run without any affinity."
+        stackRecord -= offset
+        fragmentManager.popBackStack(
+          tag,
+          FragmentManager.POP_BACK_STACK_INCLUSIVE
         )
+      } else {
+        activity.finish()
       }
     }
 
     private fun fetchFragment(route: Route): Fragment {
       val targetName = routeMap[route::class]?.java?.name
         ?: throw IllegalArgumentException(
-          "Cannot push unregistered key. Register it to a Fragment."
+          "Cannot push unregistered route <$route>. Register it to a Fragment."
         )
       return fragmentManager
         .fragmentFactory

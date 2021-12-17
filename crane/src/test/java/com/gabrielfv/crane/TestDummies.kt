@@ -13,6 +13,11 @@ data class A(val i: Int) : Route {
   override fun writeToParcel(dest: Parcel?, flags: Int) {}
 }
 
+data class Unregistered(val i: Int) : Route {
+  override fun describeContents(): Int = 0
+  override fun writeToParcel(dest: Parcel?, flags: Int) {}
+}
+
 data class Result(val i: Int) : Parcelable {
   override fun describeContents(): Int = 0
   override fun writeToParcel(dest: Parcel?, flags: Int) {}
@@ -27,7 +32,7 @@ class AFragment : Fragment() {
   val params: A by params()
 }
 
-class TestFragmentFactory(val fragment: AFragment) : FragmentFactory() {
+class TestFragmentFactory(private val fragment: AFragment) : FragmentFactory() {
 
   override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
     return fragment
