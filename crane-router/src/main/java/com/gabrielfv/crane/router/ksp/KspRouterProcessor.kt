@@ -11,6 +11,8 @@ import com.google.auto.service.AutoService
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType.ISOLATING
 
 class KspRouterProcessor(environment: SymbolProcessorEnvironment) : KspBasicAnnotationProcessor(environment) {
   private val routeRegistrarBuilder: RouteRegistrarBuilder = KtRouteRegistrarBuilder()
@@ -24,6 +26,7 @@ class KspRouterProcessor(environment: SymbolProcessorEnvironment) : KspBasicAnno
   }
 
   @AutoService(SymbolProcessorProvider::class)
+  @IncrementalAnnotationProcessor(ISOLATING)
   class Provider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor =
       KspRouterProcessor(environment)

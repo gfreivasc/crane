@@ -5,6 +5,7 @@ import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XProcessingStep
 import androidx.room.compiler.processing.XTypeElement
 import com.gabrielfv.crane.annotations.CraneRoot
+import com.gabrielfv.crane.annotations.RoutedBy
 import com.gabrielfv.crane.annotations.internal.RouteRegistrar
 import com.gabrielfv.crane.router.generating.RouterBuilder
 
@@ -15,6 +16,7 @@ internal class RouterWiringStep(
   override fun annotations(): Set<String> {
     return setOf(
       RouteRegistrar::class.qName,
+      RoutedBy::class.qName,
       CraneRoot::class.qName
     )
   }
@@ -25,15 +27,28 @@ internal class RouterWiringStep(
   ): Set<XElement> {
     val rootAnnotated = elementsByAnnotation[CraneRoot::class.qName] ?: emptyList()
     val root = fetchRoot(env, rootAnnotated) ?: return emptySet()
-    val registrars = fetchRegistrars(env)
+    if (elementsByAnnotation.containsKey(RoutedBy::class.qName)) {
+      // If we're receiving `RoutedBy` elements it means we still need
+      // to compile the registrar fot this module. Let's ignore this round
+      return setOf(root)
+    }
+    val registrars = fetchRegistrars(elementsByAnnotation, env)
     if (registrars.isEmpty()) return setOf(root)
     buildRouter(env, root, registrars)
     return emptySet()
   }
 
-  private fun fetchRegistrars(env: XProcessingEnv): Set<XTypeElement> {
-    return env.getTypeElementsFromPackage(RouterEnv.REGISTRARS_PACKAGE)
+  private fun fetchRegistrars(
+    elementsByAnnotation: Map<String, Set<XElement>>,
+    env: XProcessingEnv
+  ): Set<XTypeElement> {
+    val localRegistrars = elementsByAnnotation[RouteRegistrar::class.qName]
+      ?.filter { it.isRouteRegistrar }
+      ?.map { it as XTypeElement }
+      ?.toSet() ?: emptySet()
+    return localRegistrars + env.getTypeElementsFromPackage(RouterEnv.REGISTRARS_PACKAGE)
       .filter { it.hasAnnotation(RouteRegistrar::class) }
+      .filter { it.isRouteRegistrar }
       .toSet()
   }
 
@@ -65,3 +80,4 @@ internal class RouterWiringStep(
       it.qualifiedName == RouterEnv.registrarInterfaceName.toString()
     }
 }
+
