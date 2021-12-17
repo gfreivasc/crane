@@ -27,11 +27,12 @@ And finally include Crane artifacts to your project (for enabling KSP, [see this
 dependencies {
     val craneVersion = "0.2.0"
     implementation("com.gabrielfv.crane:crane:$craneVersion")
+
     // For automatic routing
     implementation("com.gabrielfv.crane:crane-annotations:$craneVersion")
-    kapt("com.gabrielfv.crane:crane-router:$craneVersion")
-    // For routing with ksp (currently only supporting single module) use this instead
     ksp("com.gabrielfv.crane:crane-router:$craneVersion")
+    // KAPT also available
+    // kapt("com.gabrielfv.crane:crane-router:$craneVersion")
 }
 ```
 
@@ -130,7 +131,7 @@ class NavRootActivity : AppCompatActivity {
 }
 ```
 
-The router works through annotation processing, and supports both [KAPT](https://kotlinlang.org/docs/kapt.html) *and* [KSP](https://github.com/google/ksp). Pick which you prefer to use with Crane, but beware KSP is currently experimental, and can only properly generate a `Router` in a single module project. KSP currently has no support for reaching classes from dependency modules, which makes it unable to generate a multi-module router.
+The router works through annotation processing, and supports both [KAPT](https://kotlinlang.org/docs/kapt.html) *and* [KSP](https://github.com/google/ksp). Pick which you prefer to use with Crane!
 
 #### Wrapping up
 
