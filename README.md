@@ -25,7 +25,7 @@ And finally include Crane artifacts to your project (for enabling KSP, [see this
 // Any project module "build.gradle.kts"
 // For version, see JitPack badge
 dependencies {
-    val craneVersion = "0.2.0"
+    val craneVersion = "0.3.0"
     implementation("com.gabrielfv.crane:crane:$craneVersion")
 
     // For automatic routing
@@ -132,6 +132,24 @@ class NavRootActivity : AppCompatActivity {
 ```
 
 The router works through annotation processing, and supports both [KAPT](https://kotlinlang.org/docs/kapt.html) *and* [KSP](https://github.com/google/ksp). Pick which you prefer to use with Crane!
+
+#### A note about using KSP
+
+While KSP is already stable, most IDEs (including current Android Studio versions) don't automatically recognize KSP generated files. This means you'll see the generated `Router` highlighted as an error, even when it's been successfully generated. To prevent that, you can add KSP generated files folder to your root module's source set:
+
+```kotlin
+// Module which holds Crane root "build.gradle.kts"
+android {
+    sourceSets {
+        named("main") {
+            java.srcDirs("build/generated/ksp/main/kotlin")
+        }
+        named("debug") {
+            java.srcDirs("build/generated/ksp/debug/kotlin")
+        }
+    }
+}
+```
 
 #### Wrapping up
 
