@@ -16,5 +16,5 @@ include(
   ":crane-router-tests:dummy-module-a",
   ":crane-router-tests:dummy-module-b",
   ":samples:basic",
-  ":samples:router",
+  ":samples:complete",
 )

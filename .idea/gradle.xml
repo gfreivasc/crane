@@ -21,7 +21,7 @@
             <option value="$PROJECT_DIR$/crane-router-tests/tests" />
             <option value="$PROJECT_DIR$/samples" />
             <option value="$PROJECT_DIR$/samples/basic" />
-            <option value="$PROJECT_DIR$/samples/router" />
+            <option value="$PROJECT_DIR$/samples/complete" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

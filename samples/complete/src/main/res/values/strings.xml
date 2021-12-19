@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Crazy Counter</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="pulls">Pulls: %d</string>
+</resources>

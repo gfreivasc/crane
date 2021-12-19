@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">basicsample</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="yes">Yes</string>
-    <string name="i_do_nothing">I do nothing</string>
-    <string name="actually_it_did">Actually it did</string>
-</resources>

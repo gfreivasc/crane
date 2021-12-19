@@ -151,6 +151,8 @@ android {
 }
 ```
 
+Also, even though KSP is expected to work alongside KAPT, unexpected behavior may arise if the sources are mixed. For example, calling the generated `Router` from a Dagger module broke compilation. The exact reason is yet unknown so refrain from using KSP with Dagger for now. Let me know if further unexpected errors are found.
+
 #### Wrapping up
 
 You will also need to make the same `Crane` instance available across your app, so that fragments can use that to navigate to other fragments. Ideally this should be handled by your project's dependency inversion solution, but a singleton accessor is planned. So you'll need:
