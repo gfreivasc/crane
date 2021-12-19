@@ -37,7 +37,11 @@ internal interface Navigator {
     private var stackRecord: Int = fragmentManager.backStackEntryCount
 
     init {
-      push(root, null)
+      if (fragmentManager.fragments.count() == 0) {
+        push(root, null)
+      } else {
+        stackRecord++
+      }
     }
 
     override fun push(route: Route, fragmentAnimation: FragmentAnimation?) {
