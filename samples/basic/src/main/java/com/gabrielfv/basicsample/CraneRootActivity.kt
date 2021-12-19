@@ -12,7 +12,7 @@ class CraneRootActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     val binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
-    crane.init(this, binding.root.id, FirstRoute("Gabriel"))
+    crane.init(this, binding.root.id, Routes.First)
     savedInstanceState?.let { crane.restoreSavedState(it) }
   }
 

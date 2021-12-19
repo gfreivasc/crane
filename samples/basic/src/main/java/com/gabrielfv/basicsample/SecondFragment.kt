@@ -1,39 +1,50 @@
 package com.gabrielfv.basicsample
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.gabrielfv.basicsample.collapsibleflow.CFFirstRoute
+import com.gabrielfv.basicsample.databinding.SecondFragmentBinding
 import com.gabrielfv.crane.core.Crane
-import com.gabrielfv.crane.core.Route
 import com.gabrielfv.crane.ktx.params
 import kotlinx.parcelize.Parcelize
 
-@Parcelize
-data class SecondRoute(val number: Int) : Route
-
 class SecondFragment : Fragment() {
-  private val crane = Crane.getInstance()
-  private val params: SecondRoute by params()
+  private val crane: Crane = Crane.getInstance()
+  private var binding: SecondFragmentBinding? = null
+  private val params: Routes.Second by params()
+  private var count = 0
 
   override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
+    inflater: LayoutInflater,
+    container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
-    // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.second_fragment, container, false)
+  ): View {
+    binding = SecondFragmentBinding.inflate(inflater, container, false)
+    return binding!!.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    view.findViewById<TextView>(R.id.number).apply {
-      text = "Has ${params.number} years old"
-      setOnClickListener {
-        crane.push(CFFirstRoute(params.number))
-      }
+    count = params.count + 1
+    crane.pushResult(Result(count))
+    binding!!.setupView()
+  }
+
+  private fun SecondFragmentBinding.setupView() {
+    textView.text = getString(R.string.pulls, count)
+    button.setOnClickListener {
+      crane.pop()
     }
   }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    binding = null
+  }
+
+  @Parcelize
+  data class Result(val updatedCounter: Int) : Parcelable
 }
