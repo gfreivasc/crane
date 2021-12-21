@@ -3,7 +3,7 @@ package com.gabrielfv.samples.complete
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.gabrielfv.samples.complete.databinding.NavRootBinding
-import kotlin.random.Random
+import com.gabrielfv.samples.complete.ui.home.Home
 
 class NavRootActivity : AppCompatActivity() {
   private val crane by lazy { daggerComponent.crane() }
@@ -16,7 +16,7 @@ class NavRootActivity : AppCompatActivity() {
     crane.init(
       this,
       binding.navHost.id,
-      Home(Random.nextInt()),
+      Home,
       savedInstanceState
     )
   }

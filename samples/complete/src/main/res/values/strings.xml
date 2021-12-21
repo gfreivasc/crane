@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Crazy Counter</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="pulls">Pulls: %d</string>
+    <string name="app_name">Notes</string>
+    <string name="no_notes_message">Nothing to show. How about creating a new note?</string>
+    <string name="new_note">New Note</string>
 </resources>

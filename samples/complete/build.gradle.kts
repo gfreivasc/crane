@@ -11,7 +11,7 @@ android {
   buildToolsVersion = "31.0.0"
 
   defaultConfig {
-    minSdk = 16
+    minSdk = 24
     targetSdk = 31
 
     applicationId = "com.gabrielfv.crane.basicsample"
@@ -66,6 +66,8 @@ dependencies {
   implementation("com.google.android.material:material:1.4.0")
   implementation("androidx.constraintlayout:constraintlayout:2.1.2")
   implementation("androidx.legacy:legacy-support-v4:1.0.0")
+
+
 
   implementation("com.google.dagger:dagger:2.40.5")
   kapt("com.google.dagger:dagger-compiler:2.40.5")
