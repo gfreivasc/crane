@@ -67,7 +67,8 @@ dependencies {
   implementation("androidx.constraintlayout:constraintlayout:2.1.2")
   implementation("androidx.legacy:legacy-support-v4:1.0.0")
 
-
+  implementation("androidx.room:room-common:2.4.0")
+  implementation("androidx.room:room-ktx:2.4.0")
 
   implementation("com.google.dagger:dagger:2.40.5")
   kapt("com.google.dagger:dagger-compiler:2.40.5")
