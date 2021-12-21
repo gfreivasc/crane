@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.gabrielfv.basicsample.databinding.FirstFragmentBinding
-import com.gabrielfv.crane.FragmentAnimation
 import com.gabrielfv.crane.core.Crane
 
 class FirstFragment : Fragment() {
@@ -32,12 +31,12 @@ class FirstFragment : Fragment() {
   private fun FirstFragmentBinding.setupView() {
     textView.text = getString(R.string.pulls, count)
     button.setOnClickListener {
-      crane.push(Routes.Second(count), FragmentAnimation(
+      crane.push(Routes.Second(count),
         enter = R.anim.slide_in_bottom,
         exit = R.anim.slide_out_top,
         popEnter = R.anim.slide_in_top,
         popExit = R.anim.slide_out_bottom
-      ))
+      )
     }
   }
 

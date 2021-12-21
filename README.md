@@ -29,10 +29,9 @@ dependencies {
     implementation("com.gabrielfv.crane:crane:$craneVersion")
 
     // For automatic routing
-    implementation("com.gabrielfv.crane:crane-annotations:$craneVersion")
     ksp("com.gabrielfv.crane:crane-router:$craneVersion")
-    // KAPT also available
-    // kapt("com.gabrielfv.crane:crane-router:$craneVersion")
+    // KAPT also available (choose one or the other)
+    kapt("com.gabrielfv.crane:crane-router:$craneVersion")
 }
 ```
 
@@ -212,7 +211,7 @@ crane.pushResult(ProfileRegistrationResult(true))
 val result = crane.fetchResult<ProfileRegistrationResult>()
 ```
 
-*This current implemenation comes with a limitation: Only one result of each type is allowed at a time, and it gets erased once it's fetched. This will probably change in the future, likely along with an Api change*.
+*This current implementation comes with a limitation: Only one result of each type is allowed at a time, and it gets erased once it's fetched. This will probably change in the future, likely along with an Api change*.
 
 ## Roadmap
 

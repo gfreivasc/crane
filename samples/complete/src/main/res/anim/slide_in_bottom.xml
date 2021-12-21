@@ -3,4 +3,5 @@
     android:duration="@android:integer/config_longAnimTime"
     android:fromYDelta="100%"
     android:toYDelta="0%"
+    android:opacity="opaque"
     android:zAdjustment="top" />

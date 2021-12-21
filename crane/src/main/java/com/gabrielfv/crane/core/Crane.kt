@@ -3,17 +3,10 @@ package com.gabrielfv.crane.core
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.annotation.IdRes
-import androidx.annotation.MainThread
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import com.gabrielfv.crane.FragmentAnimation
+import com.gabrielfv.crane.Transition
 import com.gabrielfv.crane.core.affinity.AffinityManager
-import com.gabrielfv.crane.core.affinity.AffinityRoute
 import com.gabrielfv.crane.core.result.ResultRegistry
-import com.gabrielfv.crane.util.placeKey
-import com.gabrielfv.crane.util.setCustomAnimations
-import com.gabrielfv.crane.util.transaction
 import kotlin.reflect.KClass
 
 class Crane internal constructor(
@@ -38,8 +31,22 @@ class Crane internal constructor(
     this.navigator = navigator
   }
 
-  override fun push(route: Route, fragmentAnimation: FragmentAnimation?) {
-    navigator.push(route, fragmentAnimation)
+  override fun push(route: Route, transition: Transition) {
+    navigator.push(route, transition)
+  }
+
+  override fun push(
+    route: Route,
+    enter: Int,
+    exit: Int,
+    popEnter: Int,
+    popExit: Int
+  ) {
+    navigator.push(route, enter, exit, popEnter, popExit)
+  }
+
+  override fun push(route: Route, transitionStyle: Int) {
+    navigator.push(route, transitionStyle)
   }
 
   override fun pop(): Boolean = navigator.pop()

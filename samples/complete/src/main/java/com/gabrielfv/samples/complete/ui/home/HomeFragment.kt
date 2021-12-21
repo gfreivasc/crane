@@ -6,11 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.gabrielfv.crane.FragmentAnimation
 import com.gabrielfv.crane.annotations.RoutedBy
 import com.gabrielfv.crane.core.Crane
 import com.gabrielfv.crane.core.Route
-import com.gabrielfv.samples.complete.R
 import com.gabrielfv.samples.complete.databinding.HomeFragmentBinding
 import com.gabrielfv.samples.complete.ui.compose.Compose
 import kotlinx.coroutines.delay
@@ -55,10 +53,7 @@ class HomeFragment @Inject constructor(
   }
 
   fun editNote(item: HomeNote? = null) {
-    crane.push(Compose(item?.id), FragmentAnimation(
-      enter = R.anim.slide_in_bottom,
-      popExit = R.anim.slide_out_bottom
-    ))
+    crane.push(Compose(item?.id))
   }
 
   override fun onDestroy() {

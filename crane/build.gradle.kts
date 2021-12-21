@@ -9,7 +9,7 @@ android {
   buildToolsVersion = "31.0.0"
 
   defaultConfig {
-    minSdk = 1
+    minSdk = 11
     targetSdk = 31
   }
   testOptions {

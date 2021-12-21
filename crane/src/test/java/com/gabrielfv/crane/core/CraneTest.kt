@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentTransaction
 import com.gabrielfv.crane.A
 import com.gabrielfv.crane.AFragment
 import com.gabrielfv.crane.Affinity
-import com.gabrielfv.crane.FragmentAnimation
 import com.gabrielfv.crane.Result
 import com.gabrielfv.crane.Unregistered
 import com.gabrielfv.crane.core.affinity.AffinityManager
@@ -35,29 +34,6 @@ class CraneTest {
   private val containerViewId = 0
   private val affinityManager: AffinityManager = mockk(relaxed = true)
   private val resultRegistry: ResultRegistry = mockk(relaxed = true)
-
-  @Test
-  fun onPush_withRoot() {
-    val fragment = AFragment()
-    val animations = FragmentAnimation()
-    every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
-    val subject = instantiate()
-    subject.init(activity, containerViewId, A(0))
-
-    subject.push(A(1))
-
-    verify(atLeast = 1) {
-      affinityManager.push(isNull())
-      fragmentTransaction.addToBackStack(isNull())
-      fragmentTransaction.replace(eq(0), eq(fragment))
-      fragmentTransaction.setCustomAnimations(
-        eq(animations.enter),
-        eq(animations.exit),
-        eq(animations.popEnter),
-        eq(animations.popExit),
-      )
-    }
-  }
 
   @Test
   fun onPush_affinityWithRoot() {
