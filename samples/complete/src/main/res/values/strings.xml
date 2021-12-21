@@ -2,4 +2,7 @@
     <string name="app_name">Notes</string>
     <string name="no_notes_message">Nothing to show. How about creating a new note?</string>
     <string name="new_note">New Note</string>
+    <string name="title_label">Title:</string>
+    <string name="compose_title">Compose</string>
+    <string name="save">Save</string>
 </resources>

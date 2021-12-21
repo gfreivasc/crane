@@ -1,11 +1,11 @@
 package com.gabrielfv.samples.complete.ui.home
 
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gabrielfv.samples.complete.databinding.HomeFragmentBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 class HomeView(
@@ -20,13 +20,18 @@ class HomeView(
     }
     notes.layoutManager = LinearLayoutManager(root.context)
     coroutineScope.launch {
-      state
-        .filter { it.notes.isNotEmpty() }
-        .collect { state ->
-          notes.adapter = HomeNotesAdapter(state.notes) {
-            controller.editNote(it)
-          }
-        }
+      state.collect { onState(it) }
+    }
+  }
+
+  private fun HomeFragmentBinding.onState(state: HomeState) {
+    val hasNotes = state.notes.isNotEmpty()
+    notes.isVisible = hasNotes
+    emptyNotes.root.isVisible = !hasNotes && !state.loading
+    if (hasNotes) {
+      notes.adapter = HomeNotesAdapter(state.notes) {
+        controller.editNote(it)
+      }
     }
   }
 }

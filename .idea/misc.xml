@@ -6,7 +6,7 @@
         <entry key="samples/basic/src/main/res/layout/first_fragment.xml" value="0.2703125" />
         <entry key="samples/basic/src/main/res/layout/second_fragment.xml" value="0.2703125" />
         <entry key="samples/complete/src/main/res/drawable/ic_baseline_done_48.xml" value="0.247" />
-        <entry key="samples/complete/src/main/res/layout/compose_fragment.xml" value="0.3645833333333333" />
+        <entry key="samples/complete/src/main/res/layout/compose_fragment.xml" value="0.165" />
         <entry key="samples/complete/src/main/res/layout/home_fragment.xml" value="0.18885869565217392" />
         <entry key="samples/complete/src/main/res/layout/home_no_notes.xml" value="0.26666666666666666" />
         <entry key="samples/complete/src/main/res/layout/home_note_item.xml" value="0.26666666666666666" />

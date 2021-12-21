@@ -10,9 +10,12 @@ import com.gabrielfv.crane.annotations.RoutedBy
 import com.gabrielfv.crane.core.Crane
 import com.gabrielfv.crane.core.Route
 import com.gabrielfv.samples.complete.databinding.HomeFragmentBinding
+import com.gabrielfv.samples.complete.notes.NotesInteractor
 import com.gabrielfv.samples.complete.ui.compose.Compose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
@@ -22,10 +25,11 @@ object Home : Route
 
 @RoutedBy(Home::class)
 class HomeFragment @Inject constructor(
-  private val crane: Crane
+  private val crane: Crane,
+  private val notesInteractor: NotesInteractor
 ) : Fragment() {
   private var _view: HomeView? = null
-  private val state: MutableStateFlow<HomeState> = MutableStateFlow(HomeState(false, emptyList()))
+  private val state: MutableStateFlow<HomeState> = MutableStateFlow(HomeState(true, emptyList()))
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -41,14 +45,10 @@ class HomeFragment @Inject constructor(
     _view!!.start(state)
     lifecycleScope.launch {
       delay(1_000)
-      state.emit(state.value.copy(notes = listOf(
-        HomeNote(
-          id = 14L,
-          title = "How to use crane",
-          preview = "Crane is an engine that wires navigation based on `Route` instances to the underlying native android navigation sctucture. Currently supporting `Fragment` navigation, it uses `FragmentActivity`'s `supportFragmentManager`",
-          lastModified = "Mon Dec 20"
-        )
-      )))
+      notesInteractor.fetchShortList()
+        .collect { notes ->
+          state.update { it.copy(loading = false, notes = notes) }
+        }
     }
   }
 
@@ -56,8 +56,8 @@ class HomeFragment @Inject constructor(
     crane.push(Compose(item?.id))
   }
 
-  override fun onDestroy() {
-    super.onDestroy()
+  override fun onDestroyView() {
+    super.onDestroyView()
     _view = null
   }
 }

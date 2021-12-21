@@ -11,7 +11,7 @@ android {
   buildToolsVersion = "31.0.0"
 
   defaultConfig {
-    minSdk = 24
+    minSdk = 26 // java.time without desugar
     targetSdk = 31
 
     applicationId = "com.gabrielfv.crane.basicsample"
@@ -63,12 +63,15 @@ dependencies {
   implementation("androidx.core:core-ktx:1.7.0")
   implementation("androidx.appcompat:appcompat:1.4.0")
   implementation("androidx.fragment:fragment-ktx:1.4.0")
+  implementation("androidx.core:core-ktx:1.7.0")
   implementation("com.google.android.material:material:1.4.0")
   implementation("androidx.constraintlayout:constraintlayout:2.1.2")
   implementation("androidx.legacy:legacy-support-v4:1.0.0")
 
   implementation("androidx.room:room-common:2.4.0")
   implementation("androidx.room:room-ktx:2.4.0")
+  kapt("androidx.room:room-compiler:2.4.0")
+
 
   implementation("com.google.dagger:dagger:2.40.5")
   kapt("com.google.dagger:dagger-compiler:2.40.5")
