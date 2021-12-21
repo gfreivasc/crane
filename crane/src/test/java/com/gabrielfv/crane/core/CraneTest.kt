@@ -77,34 +77,6 @@ class CraneTest {
   }
 
   @Test
-  fun onPop_withBackStack() {
-    val subject = instantiate()
-    subject.init(activity, containerViewId, A(0))
-
-    val result = subject.pop()
-
-    verify {
-      affinityManager.popRegular()
-    }
-    assertThat(result).isEqualTo(false)
-  }
-
-  @Test
-  fun onPop_afterPushNoBackStack() {
-    val fragment = AFragment()
-    every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)
-    val subject = instantiate()
-    subject.init(activity, containerViewId, A(0))
-
-    val result = subject.pop()
-
-    verify {
-      affinityManager.popRegular()
-    }
-    assertThat(result).isEqualTo(false)
-  }
-
-  @Test
   fun onPop_afterPushWithBackStack() {
     val fragment = AFragment()
     every { fragManager.fragmentFactory } returns testFragmentFactory(fragment)

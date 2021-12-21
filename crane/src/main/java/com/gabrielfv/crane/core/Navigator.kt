@@ -37,7 +37,7 @@ internal interface Navigator {
     private var stackRecord: Int = fragmentManager.backStackEntryCount
 
     init {
-      if (fragmentManager.fragments.count() == 0) {
+      if (fragmentManager.fragments.isEmpty()) {
         push(root, null)
       } else {
         stackRecord++
@@ -71,10 +71,11 @@ internal interface Navigator {
     }
 
     override fun pop(): Boolean {
-      if (stackRecord == 0) return false
+      if (stackRecord <= 1) return false
       affinityManager.popRegular()
-      if (stackRecord > 1) fragmentManager.popBackStack()
-      return stackRecord-- > 1
+      fragmentManager.popBackStack()
+      stackRecord--
+      return true
     }
 
     override fun popAffinity() {
