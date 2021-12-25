@@ -124,6 +124,23 @@ class CraneTest {
   }
 
   @Test
+  fun onPush_multiple() {
+    val subject = instantiate()
+    subject.init(activity, containerViewId, A(0))
+
+    subject.push(
+      A(1),
+      A(2),
+      A(3),
+    )
+
+    verify(exactly = 4) {
+      fragmentTransaction.replace(any(), any())
+      affinityManager.push(isNull())
+    }
+  }
+
+  @Test
   fun onPushResult() {
     val subject = instantiate()
     val res = Result(1)

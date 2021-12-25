@@ -31,22 +31,28 @@ class Crane internal constructor(
     this.navigator = navigator
   }
 
-  override fun push(route: Route, transition: Transition) {
-    navigator.push(route, transition)
+  override fun push(vararg route: Route, transition: Transition) {
+    navigator.push(*route, transition = transition)
   }
 
   override fun push(
-    route: Route,
+    vararg route: Route,
     enter: Int,
     exit: Int,
     popEnter: Int,
     popExit: Int
   ) {
-    navigator.push(route, enter, exit, popEnter, popExit)
+    navigator.push(
+      *route,
+      enter = enter,
+      exit = exit,
+      popEnter = popEnter,
+      popExit = popExit
+    )
   }
 
-  override fun push(route: Route, transitionStyle: Int) {
-    navigator.push(route, transitionStyle)
+  override fun push(vararg route: Route, transitionStyle: Int) {
+    navigator.push(*route, transitionStyle = transitionStyle)
   }
 
   override fun pop(): Boolean = navigator.pop()

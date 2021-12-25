@@ -19,13 +19,13 @@ internal interface Navigator {
 
   @MainThread
   fun push(
-    route: Route,
+    vararg route: Route,
     transition: Transition = Transition.FRAGMENT_OPEN
   )
 
   @MainThread
   fun push(
-    route: Route,
+    vararg route: Route,
     @AnimRes @AnimatorRes enter: Int,
     @AnimRes @AnimatorRes exit: Int = 0,
     @AnimRes @AnimatorRes popEnter: Int = 0,
@@ -34,7 +34,7 @@ internal interface Navigator {
 
   @MainThread
   fun push(
-    route: Route,
+    vararg route: Route,
     @StyleRes transitionStyle: Int
   )
 
@@ -56,59 +56,68 @@ internal interface Navigator {
 
     init {
       if (fragmentManager.fragments.isEmpty()) {
-        commitPush(root) { }
+        commitPush(root)
       } else {
         stackRecord++
       }
     }
 
     override fun push(
-      route: Route,
+      vararg route: Route,
       enter: Int,
       exit: Int,
       popEnter: Int,
       popExit: Int
     ) {
-      pushCalculateTag(route) {
+      pushCalculateTag(*route) {
         setCustomAnimations(enter, exit, popEnter, popExit)
       }
     }
 
-    override fun push(route: Route, transition: Transition) {
-      pushCalculateTag(route) {
+    override fun push(vararg route: Route, transition: Transition) {
+      pushCalculateTag(*route) {
         setTransition(transition.value)
       }
     }
 
-    override fun push(route: Route, transitionStyle: Int) {
-      pushCalculateTag(route) {
+    override fun push(vararg route: Route, transitionStyle: Int) {
+      pushCalculateTag(*route) {
         setTransitionStyle(transitionStyle)
       }
     }
 
     private fun pushCalculateTag(
-      route: Route,
+      vararg routes: Route,
       transitionSetup: FragmentTransaction.() -> Unit
     ) {
-      val tag = when (route) {
-        is AffinityRoute -> route.tag
-        else -> null
+      val taggedRoutes = routes.map { route ->
+        when (route) {
+          is AffinityRoute -> route.tag
+          else -> null
+        } to route
       }
-      commitPush(route, tag, transitionSetup)
+      commitPush(taggedRoutes, transitionSetup)
+    }
+
+    private fun commitPush(route: Route) {
+      commitPush(listOf(null to route)) { }
     }
 
     private fun commitPush(
-      route: Route,
-      tag: String? = null,
+      taggedRoutes: List<Pair<String?, Route>>,
       transitionSetup: FragmentTransaction.() -> Unit
     ) {
-      val fragment = fetchFragment(route)
-      fragment.placeKey(route)
+      val taggedFragments = taggedRoutes.map { (tag, route) ->
+        tag to fetchFragment(route)
+          .apply { placeKey(route) }
+      }
       fragmentManager.transaction {
         transitionSetup()
-        affinityManager.push(tag)
-        replace(containerId, fragment)
-        if (stackRecord > 0) addToBackStack(tag)
+        taggedFragments.forEach { (tag, fragment) ->
+          affinityManager.push(tag)
+          replace(containerId, fragment)
+          if (stackRecord > 0) addToBackStack(tag)
+        }
         stackRecord++
       }
     }
