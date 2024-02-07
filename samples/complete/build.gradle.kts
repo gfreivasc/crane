@@ -9,6 +9,7 @@ plugins {
 android {
   compileSdk = 31
   buildToolsVersion = "31.0.0"
+  namespace = "com.gabrielfv.samples.complete"
 
   defaultConfig {
     minSdk = 26 // java.time without desugar

@@ -8,6 +8,7 @@ plugins {
 android {
   compileSdk = 30
   buildToolsVersion = "31.0.0"
+  namespace = "com.gabrielfv.basicsample"
 
   defaultConfig {
     minSdk = 16
