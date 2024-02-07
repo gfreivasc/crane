@@ -1,3 +1,5 @@
+rootProject.name = "crane-lib"  // Required for project accessors
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
   repositories {
     google()

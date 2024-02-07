@@ -10,10 +10,10 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 dependencies {
-  implementation(project(":crane-router-tests:fake-android"))
-  implementation(project(":crane-annotations"))
+  implementation(projects.craneRouterTests.fakeAndroid)
+  implementation(projects.craneAnnotations)
   implementation(kotlin("stdlib"))
-  kapt(project(":crane-router"))
+  kapt(projects.craneRouter)
 
   testImplementation(libs.ksp.impl)
 }
