@@ -1,6 +1,6 @@
 plugins {
-  kotlin("jvm")
-  kotlin("kapt")
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.kotlin.kapt)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {

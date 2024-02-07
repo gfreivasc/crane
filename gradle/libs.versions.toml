@@ -16,11 +16,8 @@ mockk = "1.10.6"
 assertj = "3.21.0"
 
 [libraries]
-kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-ksp-gradle = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin", version.ref = "ksp" }
 ksp-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
 ksp-impl = { module = "com.google.devtools.ksp:symbol-processing", version.ref = "ksp" }
-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-corektx = { module = "androidx.core:core-ktx", version.ref = "androidx-corektx" }
 androidx-room-processing = { module = "androidx.room:room-compiler-processing", version.ref = "androidx-room-processing" }
@@ -38,3 +35,12 @@ assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 
 [bundles]
 androidx = ["androidx-appcompat", "androidx-corektx"]
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+android-app = { id = "com.android.application", version.ref = "android-gradle" }
+android-lib = { id = "com.android.library", version.ref = "android-gradle" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

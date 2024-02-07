@@ -1,17 +1,15 @@
-buildscript {
-  repositories {
-    mavenCentral()
-    google()
-  }
-  dependencies {
-    classpath(libs.kotlin.gradle)
-    classpath(libs.android.gradle)
-    classpath(libs.ksp.gradle)
-  }
+plugins {
+  alias(libs.plugins.kotlin.jvm) apply false
+  alias(libs.plugins.kotlin.android) apply false
+  alias(libs.plugins.kotlin.kapt) apply false
+  alias(libs.plugins.kotlin.parcelize) apply false
+  alias(libs.plugins.android.app) apply false
+  alias(libs.plugins.android.lib) apply false
+  alias(libs.plugins.ksp) apply false
 }
 
 tasks.register<Delete>("clean") {
-  delete(rootProject.buildDir)
+  delete(rootProject.layout.buildDirectory)
 }
 
 tasks.withType<Wrapper> {

@@ -1,6 +1,6 @@
 plugins {
-  id("com.android.library")
-  kotlin("android")
+  alias(libs.plugins.android.lib)
+  alias(libs.plugins.kotlin.android)
   id("maven-publish")
 }
 
@@ -11,7 +11,6 @@ android {
 
   defaultConfig {
     minSdk = 11
-    targetSdk = 31
   }
   testOptions {
     unitTests.isReturnDefaultValues = true
