@@ -57,8 +57,8 @@ android {
 
 dependencies {
 
-  implementation(project(":crane"))
-  kapt(project(":crane-router"))
+  implementation(projects.crane)
+  kapt(projects.craneRouter)
   implementation(kotlin("stdlib"))
   implementation("androidx.core:core-ktx:1.7.0")
   implementation("androidx.appcompat:appcompat:1.4.0")

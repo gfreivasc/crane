@@ -25,7 +25,7 @@ android {
 }
 
 dependencies {
-  api(project(":crane-annotations"))
+  api(projects.craneAnnotations)
   implementation(kotlin("stdlib"))
   implementation(libs.bundles.androidx)
 

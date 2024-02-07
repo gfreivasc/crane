@@ -47,7 +47,7 @@ android {
 
 dependencies {
 
-  implementation(project(":crane"))
+  implementation(projects.crane)
   implementation(kotlin("stdlib"))
   implementation("androidx.core:core-ktx:1.3.2")
   implementation("androidx.appcompat:appcompat:1.2.0")

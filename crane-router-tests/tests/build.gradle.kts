@@ -9,8 +9,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 dependencies {
-  implementation(project(":crane-router"))
-  implementation(project(":crane-annotations"))
+  implementation(projects.craneRouter)
+  implementation(projects.craneAnnotations)
   implementation(kotlin("stdlib"))
   implementation(libs.ksp.api)
   implementation(libs.google.auto.common)
@@ -20,8 +20,8 @@ dependencies {
   implementation(libs.junit)
   implementation(libs.assertj)
 
-  testImplementation(project(":crane-router-tests:fake-android"))
-  testImplementation(project(":crane-router-tests:dummy-module-a"))
-  testImplementation(project(":crane-router-tests:dummy-module-b"))
+  testImplementation(projects.craneRouterTests.fakeAndroid)
+  testImplementation(projects.craneRouterTests.dummyModuleA)
+  testImplementation(projects.craneRouterTests.dummyModuleB)
   testImplementation(libs.ksp.impl)
 }

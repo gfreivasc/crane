@@ -24,7 +24,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 dependencies {
-  implementation(project(":crane-annotations"))
+  implementation(projects.craneAnnotations)
   implementation(kotlin("stdlib"))
   implementation(kotlin("compiler-embeddable"))
   implementation(libs.ksp.api)
