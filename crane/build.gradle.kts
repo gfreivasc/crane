@@ -5,8 +5,8 @@ plugins {
 }
 
 android {
-  compileSdk = 31
-  buildToolsVersion = "31.0.0"
+  compileSdk = 34
+  buildToolsVersion = "34.0.0"
   namespace = "com.gabrielfv.crane"
 
   defaultConfig {

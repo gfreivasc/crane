@@ -10,22 +10,22 @@ import com.gabrielfv.crane.ktx.params
 
 data class A(val i: Int) : Route {
   override fun describeContents(): Int = 0
-  override fun writeToParcel(dest: Parcel?, flags: Int) {}
+  override fun writeToParcel(dest: Parcel, flags: Int) {}
 }
 
 data class Unregistered(val i: Int) : Route {
   override fun describeContents(): Int = 0
-  override fun writeToParcel(dest: Parcel?, flags: Int) {}
+  override fun writeToParcel(dest: Parcel, flags: Int) {}
 }
 
 data class Result(val i: Int) : Parcelable {
   override fun describeContents(): Int = 0
-  override fun writeToParcel(dest: Parcel?, flags: Int) {}
+  override fun writeToParcel(dest: Parcel, flags: Int) {}
 }
 
 data class Affinity(val i: Int) : AffinityRoute {
   override fun describeContents(): Int = 0
-  override fun writeToParcel(dest: Parcel?, flags: Int) {}
+  override fun writeToParcel(dest: Parcel, flags: Int) {}
 }
 
 class AFragment : Fragment() {

@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-  compileSdk = 31
-  buildToolsVersion = "31.0.0"
+  compileSdk = 34
+  buildToolsVersion = "34.0.0"
   namespace = "com.gabrielfv.samples.complete"
 
   defaultConfig {
     minSdk = 26 // java.time without desugar
-    targetSdk = 31
+    targetSdk = 34
 
     applicationId = "com.gabrielfv.crane.basicsample"
     versionCode = 1
