@@ -2,6 +2,7 @@ package com.gabrielfv.crane.core
 
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
 import com.gabrielfv.crane.Transition
@@ -14,7 +15,10 @@ class Crane internal constructor(
   private val affinityManager: AffinityManager,
   private val resultRegistry: ResultRegistry
 ) : Navigator {
-  private lateinit var navigator: Navigator
+  private var _navigator: Navigator? = null
+  private val navigator: Navigator get() = requireNotNull(_navigator) {
+    "Navigator has not been initialized. Make sure to call ${::init.name} before using Crane."
+  }
   private val saved get() = setOf(affinityManager, resultRegistry)
 
   fun init(
@@ -23,16 +27,13 @@ class Crane internal constructor(
     root: Route,
     savedInstanceState: Bundle? = null
   ) {
-    init(Navigator.Stack(activity, containerId, routeMap, affinityManager, root))
+    _navigator = StackNavigator(this, activity, containerId, routeMap, affinityManager, root)
     savedInstanceState?.let { restoreSavedState(it) }
-  }
-
-  private fun init(navigator: Navigator) {
-    this.navigator = navigator
   }
 
   override fun push(vararg route: Route, transition: Transition) {
     navigator.push(*route, transition = transition)
+
   }
 
   override fun push(
@@ -79,6 +80,10 @@ class Crane internal constructor(
 
   fun restoreSavedState(savedInstanceState: Bundle) {
     saved.forEach { it.restore(savedInstanceState) }
+  }
+
+  fun destroy() {
+    _navigator = null
   }
 
   class Factory internal constructor(
