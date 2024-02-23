@@ -3,6 +3,7 @@ package com.gabrielfv.crane.core
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.DeprecatedSinceApi
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
 import com.gabrielfv.crane.Transition
@@ -33,7 +34,6 @@ class Crane internal constructor(
 
   override fun push(vararg route: Route, transition: Transition) {
     navigator.push(*route, transition = transition)
-
   }
 
   override fun push(
@@ -52,6 +52,8 @@ class Crane internal constructor(
     )
   }
 
+  @Suppress("DEPRECATION")
+  @Deprecated("Relies on deprecated fragment APIs")
   override fun push(vararg route: Route, transitionStyle: Int) {
     navigator.push(*route, transitionStyle = transitionStyle)
   }

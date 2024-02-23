@@ -34,6 +34,7 @@ internal interface Navigator {
   )
 
   @MainThread
+  @Deprecated("Relies on deprecated fragment APIs")
   fun push(
     vararg route: Route,
     @StyleRes transitionStyle: Int
@@ -92,6 +93,8 @@ internal class StackNavigator(
     }
   }
 
+  @Suppress("DEPRECATION")
+  @Deprecated("Relies on deprecated fragment APIs")
   override fun push(vararg route: Route, transitionStyle: Int) {
     pushCalculateTag(*route) {
       setTransitionStyle(transitionStyle)
