@@ -20,9 +20,6 @@ class NavRootActivity : AppCompatActivity() {
       Home,
       savedInstanceState
     )
-    onBackPressedDispatcher.addCallback {
-      isEnabled = crane.pop()
-    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

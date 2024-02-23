@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="samples.complete">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-02-07T00:36:39.007429Z">
+        <DropdownSelection timestamp="2024-02-23T00:31:50.042178Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/gavasco/.android/avd/Pixel_6a_API_34.avd" />
+              <DeviceId pluginId="Default" identifier="serial=emulator-5554;connection=655eb5b6" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -15,10 +15,10 @@
       </SelectionState>
       <SelectionState runConfigName="samples.basic">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-02-22T22:52:30.228504Z">
+        <DropdownSelection timestamp="2024-02-23T00:41:28.542758Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/gavasco/.android/avd/Pixel_2_API_33.avd" />
+              <DeviceId pluginId="Default" identifier="serial=emulator-5554;connection=655eb5b6" />
             </handle>
           </Target>
         </DropdownSelection>

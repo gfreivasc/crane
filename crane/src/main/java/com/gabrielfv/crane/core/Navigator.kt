@@ -1,5 +1,6 @@
 package com.gabrielfv.crane.core
 
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.AnimRes
 import androidx.annotation.AnimatorRes
 import androidx.annotation.IdRes
@@ -53,6 +54,12 @@ internal interface Navigator {
   ) : Navigator {
     private val fragmentManager: FragmentManager = activity.supportFragmentManager
     private var stackRecord: Int = fragmentManager.backStackEntryCount
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+      override fun handleOnBackPressed() {
+        isEnabled = pop()
+        if (!isEnabled) activity.onBackPressedDispatcher.onBackPressed()
+      }
+    }
 
     init {
       if (fragmentManager.fragments.isEmpty()) {
@@ -120,6 +127,7 @@ internal interface Navigator {
         }
         stackRecord++
       }
+      activity.onBackPressedDispatcher.addCallback(backPressedCallback)
     }
 
     override fun pop(): Boolean {

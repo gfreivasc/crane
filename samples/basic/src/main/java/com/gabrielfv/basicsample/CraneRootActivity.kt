@@ -1,8 +1,6 @@
 package com.gabrielfv.basicsample
 
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.gabrielfv.basicsample.databinding.ActivityMainBinding
 import com.gabrielfv.crane.core.Crane
@@ -16,9 +14,6 @@ class CraneRootActivity : AppCompatActivity() {
     setContentView(binding.root)
     crane.init(this, binding.root.id, Routes.First)
     savedInstanceState?.let { crane.restoreSavedState(it) }
-    onBackPressedDispatcher.addCallback {
-      isEnabled = crane.pop()
-    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

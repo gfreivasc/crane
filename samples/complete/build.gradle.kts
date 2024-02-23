@@ -47,11 +47,11 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
   }
   kotlinOptions {
-    jvmTarget = "11"
+    jvmTarget = "17"
   }
 }
 
@@ -68,13 +68,13 @@ dependencies {
   implementation("androidx.constraintlayout:constraintlayout:2.1.2")
   implementation("androidx.legacy:legacy-support-v4:1.0.0")
 
-  implementation("androidx.room:room-common:2.4.0")
-  implementation("androidx.room:room-ktx:2.4.0")
-  kapt("androidx.room:room-compiler:2.4.0")
+  implementation("androidx.room:room-common:2.6.1")
+  implementation("androidx.room:room-ktx:2.6.1")
+  kapt("androidx.room:room-compiler:2.6.1")
 
 
-  implementation("com.google.dagger:dagger:2.40.5")
-  kapt("com.google.dagger:dagger-compiler:2.40.5")
+  implementation("com.google.dagger:dagger:2.48.1")
+  kapt("com.google.dagger:dagger-compiler:2.48.1")
 
   testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.1.3")
