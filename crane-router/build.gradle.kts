@@ -18,7 +18,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     jvmTarget = "17"
     freeCompilerArgs = freeCompilerArgs + listOf(
       "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi",
-      "-Xjvm-default=all",
+      "-Xopt-in=com.squareup.kotlinpoet.javapoet.KotlinPoetJavaPoetPreview",
     )
   }
 }

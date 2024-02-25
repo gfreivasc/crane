@@ -1,5 +1,6 @@
 package com.gabrielfv.crane.router
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XProcessingStep
@@ -23,7 +24,8 @@ internal class RouterWiringStep(
 
   override fun process(
     env: XProcessingEnv,
-    elementsByAnnotation: Map<String, Set<XElement>>
+    elementsByAnnotation: Map<String, Set<XElement>>,
+    isLastRound: Boolean,
   ): Set<XElement> {
     val rootAnnotated = elementsByAnnotation[CraneRoot::class.qName] ?: emptyList()
     val root = fetchRoot(env, rootAnnotated) ?: return emptySet()
@@ -70,7 +72,7 @@ internal class RouterWiringStep(
   ) {
     val pkg = root.packageName
     val registrarNames = registrars
-      .map { it.className.simpleName() }
+      .map { it.asClassName().toJavaPoet().simpleName() }
       .toSet()
     routerBuilder.build(env.filer, registrarNames, pkg, root)
   }

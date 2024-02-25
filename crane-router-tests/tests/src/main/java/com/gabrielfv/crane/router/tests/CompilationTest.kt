@@ -3,10 +3,12 @@ package com.gabrielfv.crane.router.tests
 import com.gabrielfv.crane.router.kapt.JavacRouterProcessor
 import com.gabrielfv.crane.router.ksp.KspRouterProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
+import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.kspIncremental
 import com.tschuchort.compiletesting.symbolProcessorProviders
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.runners.Parameterized
 import java.io.File
 import javax.annotation.processing.Processor
@@ -27,23 +29,22 @@ abstract class CompilationTest(
     )
   }
 
-  protected fun compile(folder: File, vararg sourceFiles: SourceFile): KotlinCompilation.Result {
+  @OptIn(ExperimentalCompilerApi::class)
+  protected fun compile(folder: File, vararg sourceFiles: SourceFile): JvmCompilationResult {
     val processors = provider.provide()
     val kspProcessors = processors.filterIsInstance<SymbolProcessorProvider>()
     val kaptProcessors = processors.filterIsInstance<Processor>()
-    return KotlinCompilation()
-      .apply {
-        workingDir = folder
-        inheritClassPath = true
-        if (kspProcessors.isNotEmpty()) {
-          symbolProcessorProviders = kspProcessors
-        } else if (kaptProcessors.isNotEmpty()) {
-          annotationProcessors = kaptProcessors
-        }
-        sources = sourceFiles.asList()
-        verbose = false
-        kspIncremental = true
-      }.compile()
+    return KotlinCompilation().apply {
+      workingDir = folder
+      inheritClassPath = true
+      if (kspProcessors.isNotEmpty()) {
+        symbolProcessorProviders = kspProcessors
+      } else if (kaptProcessors.isNotEmpty()) {
+        annotationProcessors = kaptProcessors
+      }
+      sources = sourceFiles.asList()
+      verbose = false
+      kspIncremental = true
+    }.compile()
   }
 }
-

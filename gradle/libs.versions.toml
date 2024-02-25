@@ -1,16 +1,16 @@
 [versions]
-kotlin = "1.9.21"
-ksp = "1.9.21-1.0.15"
+kotlin = "1.9.22"
+ksp = "1.9.22-1.0.17"
 android-gradle = "8.2.2"
 androidx-appcompat = "1.6.1"
 androidx-corektx = "1.12.0"
-androidx-room-processing = "2.4.0"
-google-auto-service = "1.0-rc7"
-google-auto-common = "0.11"
+androidx-room-processing = "2.6.1"
+google-auto-service = "1.1.1"
+google-auto-common = "1.2.1"
 gradle-incap = "0.2"
 square-javapoet = "1.13.0"
-square-kotlinpoet = "1.10.2"
-kotlin-compile = "1.4.6"
+square-kotlinpoet = "1.14.2"
+kotlin-compile-testing = "0.4.0"
 junit = "4.13.2"
 mockk = "1.13.9"
 assertj = "3.21.0"
@@ -27,8 +27,8 @@ google-auto-common = { module = "com.google.auto:auto-common", version.ref = "go
 gradle-incap = { module = "net.ltgt.gradle.incap:incap", version.ref = "gradle-incap" }
 square-javapoet = { module = "com.squareup:javapoet", version.ref = "square-javapoet" }
 square-kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "square-kotlinpoet" }
-kotlin-compile-core = { module = "com.github.tschuchortdev:kotlin-compile-testing", version.ref = "kotlin-compile" }
-kotlin-compile-ksp = { module = "com.github.tschuchortdev:kotlin-compile-testing-ksp", version.ref = "kotlin-compile" }
+test-kotlin-compile-core = { module = "dev.zacsweers.kctfork:core", version.ref = "kotlin-compile-testing" }
+test-kotlin-compile-ksp = { module = "dev.zacsweers.kctfork:ksp", version.ref = "kotlin-compile-testing" }
 junit = { module = "junit:junit", version.ref = "junit" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }

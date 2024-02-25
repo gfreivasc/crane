@@ -3,12 +3,14 @@ package com.gabrielfv.crane.router.tests
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import org.assertj.core.api.Assertions.assertThat
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
+@OptIn(ExperimentalCompilerApi::class)
 @RunWith(Parameterized::class)
 class RouteRegistrarProcessorTest(
   processors: ProcessorProvider<Any>

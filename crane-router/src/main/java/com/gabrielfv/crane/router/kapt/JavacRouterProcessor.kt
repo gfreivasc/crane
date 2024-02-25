@@ -16,7 +16,7 @@ import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
 
 @IncrementalAnnotationProcessor(ISOLATING)
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor::class)
 class JavacRouterProcessor : JavacBasicAnnotationProcessor() {
   private val routeRegistrarBuilder: RouteRegistrarBuilder =

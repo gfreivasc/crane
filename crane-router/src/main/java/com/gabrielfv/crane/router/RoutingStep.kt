@@ -1,5 +1,6 @@
 package com.gabrielfv.crane.router
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv
@@ -24,7 +25,8 @@ internal class RoutingStep(
 
   override fun process(
     env: XProcessingEnv,
-    elementsByAnnotation: Map<String, Set<XElement>>
+    elementsByAnnotation: Map<String, Set<XElement>>,
+    isLastRound: Boolean,
   ): Set<XTypeElement> {
     val elements = elementsByAnnotation[RoutedBy::class.qName]
       ?.filter { element ->
@@ -62,18 +64,18 @@ internal class RoutingStep(
       ?.getAsType(ANNOTATION_VALUE_METHOD)
       ?.typeName
       ?.toString() ?: "<ERROR>"
-    val target = element.className.canonicalName()
+    val target = element.asClassName().toJavaPoet().canonicalName()
     return ElementRoute(element, route to target)
   }
 
   private fun isFragmentDeclaration(element: XElement): Boolean {
     if (element !is XTypeElement) return false
-    var sup = element.superType
+    var sup = element.superClass
     while (sup != null) {
       if (sup.typeElement?.qualifiedName == RouterEnv.fragmentName.toString()) {
         return element.isTypeElement()
       }
-      sup = sup.typeElement?.superType
+      sup = sup.typeElement?.superClass
     }
 
     return false

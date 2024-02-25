@@ -1,6 +1,8 @@
 package com.gabrielfv.crane.router.tests
 
+import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import java.io.File
 
 /*
@@ -18,10 +20,12 @@ internal fun File.listFilesRecursively(): List<File> {
   } ?: emptyList()
 }
 
-internal val KotlinCompilation.Result.workingDir: File get() =
+@OptIn(ExperimentalCompilerApi::class)
+internal val JvmCompilationResult.workingDir: File get() =
   outputDirectory.parentFile!!
 
-val KotlinCompilation.Result.kspGeneratedSources: List<File> get() {
+@OptIn(ExperimentalCompilerApi::class)
+val JvmCompilationResult.kspGeneratedSources: List<File> get() {
   val kspWorkingDir = workingDir.resolve("ksp")
   val kspGeneratedDir = kspWorkingDir.resolve("sources")
   val kotlinGeneratedDir = kspGeneratedDir.resolve("kotlin")
