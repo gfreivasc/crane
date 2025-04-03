@@ -25,13 +25,8 @@ And finally include Crane artifacts to your project (for enabling KSP, [see this
 // Any project module "build.gradle.kts"
 // For version, see JitPack badge
 dependencies {
-    val craneVersion = "0.3.0"
+    val craneVersion = "1.0.0-alpha01"
     implementation("com.gabrielfv.crane:crane:$craneVersion")
-
-    // For automatic routing
-    ksp("com.gabrielfv.crane:crane-router:$craneVersion")
-    // KAPT also available (choose one or the other)
-    kapt("com.gabrielfv.crane:crane-router:$craneVersion")
 }
 ```
 
@@ -53,7 +48,7 @@ Here's an example of a fragment routed by Crane:
 ```kotlin
 // i.e. ":navigation" module
 @Parcelize
-data class HomeRoute(val title: String) : Route
+data class HomeRoute(val title: String) : Route(HomeFragment::class)
 
 // i.e. ":features:home" module
 class HomeFragment : Fragment() {
@@ -66,20 +61,11 @@ class HomeFragment : Fragment() {
 }
 ```
 
-Crane does not know from scratch that `HomeRoute` routes to `HomeFragment`. For that, we need a `RouteMap` which is a typealias for simply a regular `Map` that will wire our routes to our fragments.
-
-```kotlin
-// This would be placed in your bottom module, i.e. ":app" module
-val routeMap: RouteMap = mapOf(
-    HomeRoute::class to HomeFragment::class,
-)
-```
-
 Now to set up your navigation you will need to create an activity that will hold everything for us
 
 ```kotlin
 class NavRootActivity : AppCompatActivity {
-    private val crane: Crane = Crane.create(routeMap)  // Or on your Dependency Graph
+    private val crane: Crane = Crane.create()  // Or on your Dependency Graph
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,54 +89,6 @@ class NavRootActivity : AppCompatActivity {
     }
 }
 ```
-
-#### Using a generated route map
-
-Instead of manually creating our route map, we can also rely on `crane-router` to automatically do it for us by using the `@RoutedBy` annotation
-
-```kotlin
-// router currently only works if the fragment is in the bottom module
-@RoutedBy(HomeRoute::class)
-class HomeFragment : Fragment() {
-    // ...
-}
-```
-
-We should also annotate where we intend to build our navigation with `@CraneRoot`, this will inform our code generator in which module and package it should generate our `Router`. Once it's generated, we can reference it when building Crane.
-
-```kotlin
-@CraneRoot
-class NavRootActivity : AppCompatActivity {
-    private val crane: Crane = Crane.create(Router.get())
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        crane.init(this, android.R.id.content, ARoute())
-    }
-}
-```
-
-The router works through annotation processing, and supports both [KAPT](https://kotlinlang.org/docs/kapt.html) *and* [KSP](https://github.com/google/ksp). Pick which you prefer to use with Crane!
-
-#### A note about using KSP
-
-While KSP is already stable, most IDEs (including current Android Studio versions) don't automatically recognize KSP generated files. This means you'll see the generated `Router` highlighted as an error, even when it's been successfully generated. To prevent that, you can add KSP generated files folder to your root module's source set:
-
-```kotlin
-// Module which holds Crane root "build.gradle.kts"
-android {
-    sourceSets {
-        named("main") {
-            java.srcDirs("build/generated/ksp/main/kotlin")
-        }
-        named("debug") {
-            java.srcDirs("build/generated/ksp/debug/kotlin")
-        }
-    }
-}
-```
-
-Also, even though KSP is expected to work alongside KAPT, unexpected behavior may arise if the sources are mixed. For example, calling the generated `Router` from a Dagger module broke compilation. The exact reason is yet unknown so refrain from using KSP with Dagger for now. Let me know if further unexpected errors are found.
 
 #### Wrapping up
 
@@ -176,7 +114,7 @@ After we confirm our action of posting a new picture, we don't want to go back t
 ```kotlin
 // GalleryRoute.kt
 @Parcelize
-class GalleryRoute : AffinityRoute
+class GalleryRoute : AffinityRoute(GalleryFragment::class)
 
 // Any fragment
 crane.push(GalleryRoute()) // Crane will know to set an Affinity
