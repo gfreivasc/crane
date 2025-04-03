@@ -97,9 +97,7 @@ You will also need to make the same `Crane` instance available across your app, 
 - A root activity with a `FragmentManager`.
 - A fragment that will represent your navigation home.
 - A `Route` to that fragment.
-- A Route map, that tells `Crane` which fragment a `Route` leads to.
-  - `crane-router` can automate that process.
-- Something to hold the single `Crane` instance and make it available to the rest of the project.
+- (_Optional_) Something to hold the single `Crane` instance and make it available to the rest of the project.
 
 ### Navigation Affinity
 
