@@ -8,12 +8,7 @@ import com.gabrielfv.crane.core.Route
 import com.gabrielfv.crane.core.affinity.AffinityRoute
 import com.gabrielfv.crane.ktx.params
 
-data class A(val i: Int) : Route {
-  override fun describeContents(): Int = 0
-  override fun writeToParcel(dest: Parcel, flags: Int) {}
-}
-
-data class Unregistered(val i: Int) : Route {
+data class A(val i: Int) : Route(AFragment::class) {
   override fun describeContents(): Int = 0
   override fun writeToParcel(dest: Parcel, flags: Int) {}
 }
@@ -23,7 +18,7 @@ data class Result(val i: Int) : Parcelable {
   override fun writeToParcel(dest: Parcel, flags: Int) {}
 }
 
-data class Affinity(val i: Int) : AffinityRoute {
+data class Affinity(val i: Int) : AffinityRoute(AFragment::class) {
   override fun describeContents(): Int = 0
   override fun writeToParcel(dest: Parcel, flags: Int) {}
 }

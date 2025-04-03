@@ -6,7 +6,7 @@ import com.gabrielfv.basicsample.databinding.ActivityMainBinding
 import com.gabrielfv.crane.core.Crane
 
 class CraneRootActivity : AppCompatActivity() {
-  private val crane: Crane = Crane.create(routeMap)
+  private val crane: Crane = Crane.create()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

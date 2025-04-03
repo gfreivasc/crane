@@ -2,8 +2,6 @@ package com.gabrielfv.crane.core
 
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.activity.OnBackPressedCallback
-import androidx.annotation.DeprecatedSinceApi
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
 import com.gabrielfv.crane.Transition
@@ -12,9 +10,8 @@ import com.gabrielfv.crane.core.result.ResultRegistry
 import kotlin.reflect.KClass
 
 class Crane internal constructor(
-  private val routeMap: RouteMap,
-  private val affinityManager: AffinityManager,
-  private val resultRegistry: ResultRegistry
+  private val affinityManager: AffinityManager = AffinityManager(),
+  private val resultRegistry: ResultRegistry = ResultRegistry(),
 ) : Navigator {
   private var _navigator: Navigator? = null
   private val navigator: Navigator get() = requireNotNull(_navigator) {
@@ -28,7 +25,7 @@ class Crane internal constructor(
     root: Route,
     savedInstanceState: Bundle? = null
   ) {
-    _navigator = StackNavigator(this, activity, containerId, routeMap, affinityManager, root)
+    _navigator = StackNavigator(activity, containerId, affinityManager, root)
     savedInstanceState?.let { restoreSavedState(it) }
   }
 
@@ -82,21 +79,5 @@ class Crane internal constructor(
 
   fun restoreSavedState(savedInstanceState: Bundle) {
     saved.forEach { it.restore(savedInstanceState) }
-  }
-
-  fun destroy() {
-    _navigator = null
-  }
-
-  class Factory internal constructor(
-    private val affinityManager: AffinityManager,
-    private val resultRegistry: ResultRegistry
-  ) {
-
-    constructor() : this(AffinityManager(), ResultRegistry())
-
-    fun create(routeMap: RouteMap): Crane {
-      return Crane(routeMap, affinityManager, resultRegistry)
-    }
   }
 }
