@@ -48,10 +48,8 @@ internal interface Navigator {
 }
 
 internal class StackNavigator(
-  private val crane: Crane,
   private val activity: FragmentActivity,
   @IdRes private val containerId: Int,
-  private val routeMap: RouteMap,
   private val affinityManager: AffinityManager,
   root: Route,
 ) : Navigator {
@@ -61,7 +59,6 @@ internal class StackNavigator(
     override fun handleOnBackPressed() {
       isEnabled = pop()
       if (!isEnabled) {
-        destroy()
         activity.onBackPressedDispatcher.onBackPressed()
       }
     }
@@ -138,11 +135,6 @@ internal class StackNavigator(
     activity.onBackPressedDispatcher.addCallback(backPressedCallback)
   }
 
-  private fun destroy() {
-    backPressedCallback.remove()
-    crane.destroy()
-  }
-
   override fun pop(): Boolean {
     if (stackRecord <= 1) return false
     affinityManager.popRegular()
@@ -166,10 +158,7 @@ internal class StackNavigator(
   }
 
   private fun fetchFragment(route: Route): Fragment {
-    val targetName = routeMap[route::class]?.java?.name
-      ?: throw IllegalArgumentException(
-        "Cannot push unregistered route <$route>. Register it to a Fragment."
-      )
+    val targetName = route.destination.java.name
     return fragmentManager
       .fragmentFactory
       .instantiate(

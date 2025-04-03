@@ -8,7 +8,6 @@ import com.gabrielfv.crane.A
 import com.gabrielfv.crane.AFragment
 import com.gabrielfv.crane.Affinity
 import com.gabrielfv.crane.Result
-import com.gabrielfv.crane.Unregistered
 import com.gabrielfv.crane.core.affinity.AffinityManager
 import com.gabrielfv.crane.core.result.ResultRegistry
 import com.gabrielfv.crane.testFragmentFactory
@@ -19,10 +18,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class CraneTest {
-  private val routeMap: RouteMap = mapOf(
-    A::class to AFragment::class,
-    Affinity::class to AFragment::class
-  )
   private val fragmentTransaction: FragmentTransaction = mockk(relaxed = true)
   private val fragManager: FragmentManager = mockk(relaxed = true) {
     every { backStackEntryCount } returns 0
@@ -105,22 +100,6 @@ class CraneTest {
     verify(exactly = 0) {
       activity.finish()
     }
-  }
-
-  @Test
-  fun onPush_unregistered() {
-    val subject = instantiate()
-    subject.init(activity, containerViewId, A(0))
-
-    val error = try {
-      subject.push(Unregistered(0))
-    } catch (ex: IllegalArgumentException) {
-      ex
-    } as IllegalArgumentException
-
-    assertThat(error).hasMessage(
-      "Cannot push unregistered route <Unregistered(i=0)>. Register it to a Fragment."
-    )
   }
 
   @Test
@@ -218,9 +197,5 @@ class CraneTest {
     }
   }
 
-  private fun instantiate() = Crane(
-    routeMap,
-    affinityManager,
-    resultRegistry
-  )
+  private fun instantiate() = Crane(affinityManager, resultRegistry)
 }

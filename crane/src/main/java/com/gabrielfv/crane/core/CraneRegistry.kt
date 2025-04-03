@@ -5,10 +5,7 @@ import androidx.annotation.MainThread
 interface CraneRegistry {
 
   @MainThread
-  fun create(
-    routeMap: RouteMap,
-    factory: Crane.Factory = Crane.Factory()
-  ): Crane
+  fun create(): Crane
 
   @MainThread
   fun getInstance(): Crane
@@ -16,8 +13,8 @@ interface CraneRegistry {
   class Default : CraneRegistry {
     private lateinit var instance: Crane
 
-    override fun create(routeMap: RouteMap, factory: Crane.Factory): Crane {
-      return factory.create(routeMap).also { crane ->
+    override fun create(): Crane {
+      return Crane().also { crane ->
         instance = crane
       }
     }

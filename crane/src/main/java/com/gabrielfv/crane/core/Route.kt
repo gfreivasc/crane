@@ -1,5 +1,7 @@
 package com.gabrielfv.crane.core
 
 import android.os.Parcelable
+import androidx.fragment.app.Fragment
+import kotlin.reflect.KClass
 
-interface Route : Parcelable
+abstract class Route(val destination: KClass<out Fragment>) : Parcelable

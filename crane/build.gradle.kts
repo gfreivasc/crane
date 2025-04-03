@@ -5,8 +5,8 @@ plugins {
 }
 
 android {
-  compileSdk = 34
-  buildToolsVersion = "34.0.0"
+  compileSdk = 35
+  buildToolsVersion = "35.0.0"
   namespace = "com.gabrielfv.crane"
 
   defaultConfig {
@@ -16,16 +16,15 @@ android {
     unitTests.isReturnDefaultValues = true
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
   }
   kotlinOptions {
-    jvmTarget = "17"
+    jvmTarget = "21"
   }
 }
 
 dependencies {
-  api(projects.craneAnnotations)
   implementation(kotlin("stdlib"))
   implementation(libs.bundles.androidx)
 
